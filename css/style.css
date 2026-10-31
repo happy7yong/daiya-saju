@@ -180,6 +180,7 @@ button.go:hover { transform: translateY(-2px); }
 
 .note { font-size: 12px; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
 .note p { margin: 0; }
+.note a { color: inherit; }
 hr.seam { border: 0; height: 10px; margin: 0;
   background: repeating-linear-gradient(115deg, transparent 0 6px, var(--accent) 6px 8px, transparent 8px 14px) 0 50% / 100% 6px no-repeat; opacity: .45; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

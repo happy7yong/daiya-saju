@@ -299,6 +299,7 @@ const PACK_EN = {
       "Players' birthdays are the official month and day. Birth years use the officially revealed Sawamura & Furuya (1990); Chris, Kawakami, Mei, Raichi, Haruichi and others use the years listed on the pixiv Encyclopedia, and the rest are estimated from their school year (in Japan, those born Jan 1–Apr 1 join the previous grade). Manager Kataoka's birth year is unknown, so his compatibility uses his personality stem. Birth times are unknown, so only the year, month and day pillars are used.",
       "Pair descriptions are based on in-story relationships where they exist; for pairs with little contact, they're read from the two day stems (union, clash, generating, controlling). Names follow the official romanization; descriptions summarize the original manga Ace of Diamond (Yuji Terajima). Unofficial fan-made, just for fun — not affiliated with the author, publisher or anime studio."
     ],
+    contact:"Corrections:",
     sample:(y,m,d,t)=>`Sample result · born ${y}-${m}-${d} ${t}`,
     err:"Please enter a date between 1900 and 2100.",
     pil:{ hour:"Hour", day:"Day", month:"Month", year:"Year" }, self:"Self (day stem)", unknownTime:"Time unknown", me:"Me (day stem)",
