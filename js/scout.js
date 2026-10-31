@@ -117,10 +117,10 @@ function scout(p) {
   const aceRb = { chung:30, hap:20, hit:12, ctrl:12 };
   const ace = SCHOOLS.filter(k => k !== school).flatMap(k => ACES[k]).map(cs)
     .sort((x, y) => ((aceRb[y.rel] || 0) + Math.abs(y.score - 50) * 0.3) - ((aceRb[x.rel] || 0) + Math.abs(x.score - 50) * 0.3))[0];
-  // 청심료 룸메이트 (세이도 입학 시): 3학년·2학년 각 1명, 선배·라이벌·짝꿍과 겹치지 않게
+  /* 청심료 룸메이트 (사용 안 함) (세이도 입학 시): 3학년·2학년 각 1명, 선배·라이벌·짝꿍과 겹치지 않게
   const taken = [mentor.c.id, rival.c.id, partner.c.id];
   const pick = ids => { const l = ids.filter(id => !taken.includes(id)); return (l.length ? l : ids).map(cs).sort((x, y) => y.score - x.score)[0]; };
-  const room = school === "seido" ? [pick(ROOM3), pick(ROOM2)] : null;
+  */ const room = null;
   const weapon = { kind: pos === "P" ? "P" : "H", el: domEl, ref: byId(WEAPON_REF[pos === "P" ? "P" : "H"][domEl]) };
   const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1] + r[2], ichidai: r[2] + r[1] };
   const why = s => S().schoolReason[s](Math.round(sp[s] * 100), s === "inashiro" ? a.support >= 0.55 : (domEl === 3 || domEl === 4));
@@ -139,7 +139,7 @@ let LAST = [1997, 8, 21, 9, 40, true, "next", true], LAST_R = null;
 function shareUrl(R) {
   const base = location.origin + "/scout";
   const f = [R.school, R.pos, R.num, { 신강:"s", 중화:"b", 신약:"w" }[R.lab], R.mentor.c.id, R.mentor.score, R.rival.c.id, R.rival.score, R.partner.c.id, R.partner.score, R.ace.c.id, R.ace.score]
-    .concat(R.room ? [R.room[0].c.id, R.room[1].c.id] : []);
+;
   return base + "?sc=" + f.join(".") + "#" + LANG;
 }
 function parseFriend() {
@@ -149,7 +149,7 @@ function parseFriend() {
     const ok = id => byId(id) ? id : null;
     if (!SCHOOLS.includes(a[0]) || !POS[a[1]]) return null;
     const f = { school:a[0], pos:a[1], num:+a[2], lab:{ s:"신강", b:"중화", w:"신약" }[a[3]] || "중화",
-      mentor:[ok(a[4]), +a[5]], rival:[ok(a[6]), +a[7]], partner:[ok(a[8]), +a[9]], ace:[ok(a[10]), +a[11]], room:[ok(a[12]), ok(a[13])].filter(Boolean) };
+      mentor:[ok(a[4]), +a[5]], rival:[ok(a[6]), +a[7]], partner:[ok(a[8]), +a[9]], ace:[ok(a[10]), +a[11]] };
     if (![f.mentor, f.rival, f.partner, f.ace].every(x => x[0])) return null;
     return f;
   } catch (e) { return null; }
@@ -162,7 +162,7 @@ function renderFriend() {
   box.hidden = false;
   box.innerHTML = `<span class="friend-label">${esc(s.friendT)}</span>
     <div class="sc-fhead"><b class="sc-school ${f.school}">${esc(P().team[f.school])}</b> <span class="sc-fnum">#${f.num}</span> <span class="sc-fpos">${esc(s.pos[f.pos])}</span></div>
-    <div class="friend-others">${chip(s.mentorT, f.mentor)}${chip(s.rivalT, f.rival)}${chip(s.partnerT[f.pos], f.partner)}${chip(s.aceChip, f.ace)}${f.room.map(id => chip("🛏️", [id, 0])).join("")}</div>
+    <div class="friend-others">${chip(s.mentorT, f.mentor)}${chip(s.rivalT, f.rival)}${chip(s.partnerT[f.pos], f.partner)}${chip(s.aceChip, f.ace)}</div>
     <button type="button" class="go friend-go" id="friendGo">${esc(s.tryMine)}</button>`;
   $("friendGo").addEventListener("click", () => { $("bd").focus(); $("f").scrollIntoView({ behavior: "smooth", block: "center" }); track("friend_try_click", { lang: LANG, page: "scout" }); });
 }
@@ -204,10 +204,6 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
   const ac = C(R.ace.c), aceWho = R.pos === "P" ? s.aceDuelP : s.aceDuelH;
   $("scAce").innerHTML = `<h2>${esc(s.hAce)}</h2>` + personCard(R, aceWho(pk.team[R.ace.c.team]), R.ace, (s.aceWhy[R.ace.rel] || s.aceWhy.other)(ac.name))
     + `<p class="sc-pred">${esc(s.predL)} <b>${esc(s.pred[R.ace.rel] || s.pred.other)}</b></p>`;
-  // 청심료 룸메이트
-  $("scRoom").hidden = !R.room;
-  if (R.room) $("scRoom").innerHTML = `<h2>${esc(s.hRoom)}</h2><p class="split">${esc(s.roomNote)}</p><div class="sc-people">`
-    + R.room.map(rc => personCard(R, s.roomT[rc === R.room[0] ? 0 : 1], rc, s.room[rc.c.id](C(rc.c).name))).join("") + `</div>`;
   LAST_R = R;
   $("scCoach").innerHTML = `<div class="sc-ct">${esc(s.coachT)}</div><blockquote>“${esc(s.coach[R.domG])} ${esc(R.school === "seido" ? s.coachTail[R.lab] : s.coachAway(schoolName))}”</blockquote>`;
   if (!isSample && !render.silent) track("scout_result", { school: R.school, pos: R.pos, lang: LANG });
