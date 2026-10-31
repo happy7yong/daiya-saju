@@ -259,7 +259,7 @@ const PACK_EN = {
     shareX:"Share on X (Twitter)", copyLink:"Copy link", copied:"Copied!",
     shareText:(n,stem,type)=>`My Ace of Diamond match by Saju is ${n}! (${stem}, ${type}) Try yours ⚾ #DaiyaSaju #AceOfDiamond`,
     cx:{
-      h:"Saju compatibility reading", hint:"Tap another player in the score bars below to switch the reading to that player.",
+      h:"Saju compatibility reading", hint:"Tap any player to see your compatibility reading with them!",
       title:(me,n)=>`You × ${n}`, mine:"Your chart", theirs:n=>`${n}'s birthday chart`, noReal:n=>`${n}'s birth year isn't public, so this reading uses only his personality stem.`,
       kDay:"Day stems", kFill:"Five Elements balance", kDayB:"Day branches", kYear:"Zodiac (year branch)", kGod:"What are you to each other?",
       fillGood:els=>`He has plenty of the ${els} energy your chart lacks, filling in your gap.`,

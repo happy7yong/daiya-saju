@@ -258,3 +258,25 @@ button.bar.pick[aria-pressed="true"] { background: var(--accent-soft); }
 .share { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .share button { font: inherit; font-size: 13px; padding: 6px 14px; border-radius: 999px; cursor: pointer; border: 1.5px solid var(--ink); }
 .share-copy { background: var(--paper); color: var(--ink); }
+
+/* 궁합 점수 막대: 누를 수 있다는 걸 보여 주기 */
+.chem { gap: 8px 14px; }
+button.bar.pick {
+  display: grid; grid-template-columns: 118px 1fr 30px 14px; gap: 8px; align-items: center;
+  width: 100%; margin: 0; padding: 9px 10px 9px 12px;
+  font: inherit; font-size: 13px; color: inherit; text-align: left; cursor: pointer;
+  background: var(--paper); border: 1.5px solid var(--line); border-radius: 12px;
+  transition: border-color .12s, background .12s, transform .12s;
+}
+button.bar.pick::after { content: "›"; font-size: 20px; line-height: 1; color: var(--ink-soft); text-align: right; }
+button.bar.pick:hover { border-color: var(--ink); background: var(--paper); transform: translateX(2px); }
+button.bar.pick:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
+button.bar.pick[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 4px 0 0 var(--accent); }
+button.bar.pick[aria-pressed="true"]::after { color: var(--accent); }
+#u-cxHint {
+  margin: 2px 0 4px; padding: 10px 14px; border-radius: 12px;
+  background: var(--accent-soft); color: var(--ink); font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+#u-cxHint::before { content: "👆"; font-size: 18px; }
+@media (prefers-reduced-motion: reduce) { button.bar.pick { transition: none; } button.bar.pick:hover { transform: none; } }
