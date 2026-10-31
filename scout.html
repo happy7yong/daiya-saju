@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>내가 다이에이 세계에 입학한다면?</title>
+<meta name="description" content="생년월일로 사주를 풀어 다이아몬드 에이스(ダイヤのA) 세계에 입학하면 어느 학교, 어떤 포지션일지, 나를 키워 줄 선배와 라이벌까지 알아보는 비공식 팬 테스트.">
+<meta name="theme-color" content="#16224a">
+<!-- 공유 카드 (주소를 바꾸면 og:url·og:image·twitter:image도 함께 바꿔 주세요) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="내가 다이에이 세계에 입학한다면?">
+<meta property="og:description" content="사주로 보는 다이에이 입학 시뮬레이션: 스카우트된 학교, 포지션, 등번호, 선배·라이벌·배터리 짝꿍까지.">
+<meta property="og:image" content="https://daiya-saju.vercel.app/assets/og-scout.png">
+<meta property="og:url" content="https://daiya-saju.vercel.app/scout">
+<link rel="canonical" href="https://daiya-saju.vercel.app/scout">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="내가 다이에이 세계에 입학한다면?">
+<meta name="twitter:description" content="사주로 보는 다이에이 입학 시뮬레이션: 학교, 포지션, 선배·라이벌까지.">
+<meta name="twitter:image" content="https://daiya-saju.vercel.app/assets/og-scout.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Serif+KR:wght@500;700&family=Zen+Maru+Gothic:wght@500;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/scout.css">
+<script src="js/config.js"></script>
+<script src="js/analytics.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="langs" aria-label="Language">
+    <button type="button" data-lang="ko">한국어</button>
+    <button type="button" data-lang="ja">日本語</button>
+    <button type="button" data-lang="en">English</button>
+  </nav>
+  <header>
+    <span class="eyebrow" id="s-eyebrow"></span>
+    <h1><span id="s-h1a"></span><br><em id="s-h1b"></em></h1>
+    <p class="lede" id="s-lede"></p>
+  </header>
+
+  <section class="friend" id="friend" hidden aria-live="polite"></section>
+
+  <form id="f" novalidate>
+    <div class="field">
+      <label for="bd" id="u-bd"></label>
+      <input id="bd" type="date" value="1997-08-21" min="1900-01-01" max="2100-12-31" required>
+    </div>
+    <div class="field">
+      <label for="bt" id="u-bt"></label>
+      <input id="bt" type="time" value="09:40">
+    </div>
+    <div class="field">
+      <label for="zi" id="u-zi"></label>
+      <select id="zi">
+        <option value="next" id="u-ziNext"></option>
+        <option value="same" id="u-ziSame"></option>
+      </select>
+    </div>
+    <label class="field check" for="nt"><input id="nt" type="checkbox"> <span id="u-nt"></span></label>
+    <p class="err" id="err" hidden></p>
+    <div class="form-foot">
+      <p class="hint" id="u-hint"></p>
+      <button class="go" type="submit" id="s-go"></button>
+    </div>
+  </form>
+
+  <section class="section" id="scout" aria-live="polite">
+    <span class="sample-tag" id="sampleTag"></span>
+    <div class="sc-hero" id="scHero"></div>
+  </section>
+
+  <section class="section">
+    <h2 id="s-hPeople"></h2>
+    <div class="sc-people" id="scPeople"></div>
+    <div class="sc-coach" id="scCoach"></div>
+  </section>
+
+  <section class="section" id="scRoom"></section>
+
+  <section class="section" id="scAce"></section>
+
+  <section class="section">
+    <h2 id="s-hSchool"></h2>
+    <p class="split" id="s-schoolNote"></p>
+    <div class="sc-schools" id="scSchools"></div>
+  </section>
+
+  <p class="sc-backwrap"><a class="go sc-back" id="s-back" href="./"></a></p>
+
+  <div class="note" id="s-notes"></div>
+</div>
+<script src="js/saju-engine.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/chemistry-ko.js"></script>
+<script src="js/compat.js"></script>
+<script src="js/i18n-ko.js"></script>
+<script src="js/i18n-ja.js"></script>
+<script src="js/i18n-en.js"></script>
+<script src="js/scout-i18n.js"></script>
+<script src="js/scout.js"></script>
+</body>
+</html>
