@@ -9,7 +9,7 @@ const PACK_KO = {
   chem: null,    // 원본 CHEM 사용
   ui: {
     htmlLang:"ko",
-    shareX:"X(트위터)에 결과 공유", copyLink:"링크 복사", copied:"복사했어요!",
+    shareX:"X(트위터)에 결과 공유", copyLink:"링크 복사", shareMine:"🔗 내 결과 링크 복사", friendT:"친구가 보낸 결과", friendPct:p=>`닮음 ${p}%`, tryMine:"나도 해 보기 ↓", friendCompat:"친구와 나의 궁합", copied:"복사했어요!",
     shareText:(n,stem,type)=>`사주로 찾은 나의 다이아몬드 에이스는 ${n}! (${stem} ${type}) 너도 해 봐 ⚾ #다이에이사주 #다이아몬드에이스`,
     cx:{
       h:"사주 궁합 풀이", hint:"선수를 누르면 그 선수와의 궁합 풀이를 볼 수 있어요!",

@@ -7,7 +7,7 @@
 - **생일 사주**: 선수 공식 생일(연·월·일주)로 계산한 실제 사주와 성격 타입 비교
 - **궁합 풀이**: 일간 합·충·생극, 오행 보완, 일지·띠(년지) 합·충, 서로의 십성 — 점수 막대에서 선수를 누르면 풀이가 바뀜
 - **다국어**: `#ko` `#ja` `#en` 해시로 언어 고정 링크 공유 가능
-- **공유**: X(트위터) 공유 버튼, 링크 복사
+- **결과 카드 공유**: "내 결과 링크 복사" → 받은 사람에게 친구 결과 카드 + 나도 해 보기 + 친구와의 궁합. 링크에는 생년월일 없이 결과만 담김 (`?r=선수.일간.신강약.닮음%.찰떡배터리.점수`)
 
 ## 구조
 ```
@@ -40,14 +40,16 @@ assets/og.png         공유 카드 이미지 (1200×630)
 
 | 이벤트 | 언제 | 파라미터 |
 |---|---|---|
-| `submit_birth` | "플레이 볼" 제출 | `has_time`, `lang` |
+| `submit_birth` | "플레이 볼" 제출 | `has_time`, `lang`, `from_share` |
 | `result_shown` | 결과 표시(예시·언어 전환 제외) | `char`, `day_stem`(0~9), `strength`, `has_time`, `lang` |
 | `compat_view` | 궁합 풀이가 화면에 40% 이상 보임 | `lang` |
 | `compat_pick` | 점수 막대에서 다른 선수 선택 | `char`, `lang` |
 | `lang_change` | 언어 전환 | `lang` |
 | `dex_open` | 생일 사주 도감 펼침 | `lang` |
 | `intro_toggle` | 사주 설명(일/영) 열고 닫음 | `open`, `lang` |
-| `share_click` | X 공유 / 링크 복사 | `channel`, `char`, `lang` |
+| `share_click` | "내 결과 링크 복사" | `channel`, `char`, `lang` |
+| `shared_link_open` | 친구가 보낸 결과 링크로 방문 | `char`, `lang` |
+| `friend_try_click` | 친구 카드의 "나도 해 보기" | `lang` |
 
 추천 퍼널: `page_view → submit_birth → result_shown → compat_view → compat_pick → share_click`
 

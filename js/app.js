@@ -82,7 +82,11 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   $("mName").textContent = c.name;
   $("mAlias").innerHTML = teamTag(c) + esc(c.pos);
   $("mTag").textContent = c.tag;
-  LAST_RESULT = { id: c.id, name: c.name, stem: stemName(c.stem), type: c.s > 0 ? u.strongType : u.weakType };
+  LAST_RESULT = { id: c.id, name: c.name, stem: stemName(c.stem), type: c.s > 0 ? u.strongType : u.weakType,
+    ds, s: a.strengthLabel === "신강" ? "s" : a.strengthLabel === "신약" ? "w" : "b", pct: pct(top.raw) };
+  $("shareBox").hidden = isSample;
+  $("copyLink").textContent = u.shareMine;
+  $("shareNote").textContent = "";
   if (!isSample && !SILENT) track("result_shown", { char: c.id, day_stem: ds, strength: { 신강:"strong", 신약:"weak", 중화:"balanced" }[a.strengthLabel], has_time: hasTime, lang: LANG });
   CX_SEEN = false;
 
@@ -144,6 +148,8 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   const cs = compat(ds, a, c.id);
   CX = { ds, a, p, me: c };
   BEST_ID = cs[0].c.id;
+  LAST_RESULT.best = cs[0].c.id; LAST_RESULT.bestScore = cs[0].score;
+  renderFriend(ds, a);
   const best = cs[0], worst = cs[cs.length - 1];
   const pairHtml = (r, good) => {
     const x = C(r.c), ch = chemOf([c.id, x.id].sort().join("|")), RR = pk.rel[r.rel];
@@ -268,7 +274,7 @@ $("f").addEventListener("submit", e => {
   if (hasTime) { [hh, mm] = $("bt").value.split(":").map(Number); }
   err.hidden = true;
   CX_PICK = null;
-  track("submit_birth", { has_time: hasTime, lang: LANG });
+  track("submit_birth", { has_time: hasTime, lang: LANG, from_share: !!FRIEND });
   render(+mt[1], +mt[2], +mt[3], hh, mm, hasTime, $("zi").value, false);
   $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 });
@@ -287,6 +293,56 @@ if ("IntersectionObserver" in window) {
     if (en.isIntersecting && !CX_SEEN && $("sampleTag").hidden) { CX_SEEN = true; track("compat_view", { lang: LANG }); }
   }), { threshold: 0.25 }).observe($("pGood"));
 }
+
+// ===== 결과 카드 공유 (생년월일은 링크에 넣지 않음) =====
+// ?r=<선수id>.<일간0~9>.<s|w|b>.<닮음%>.<찰떡 배터리id>.<점수>
+function parseFriend() {
+  try {
+    const r = new URLSearchParams(location.search).get("r");
+    if (!r) return null;
+    const [id, ds, s, p, bid, bs] = r.split(".");
+    const ch = CHARS.find(c => c.id === id), bc = CHARS.find(c => c.id === bid);
+    const d = +ds, pc = +p, sc = +bs;
+    if (!ch || !bc || !(d >= 0 && d <= 9) || !"swb".includes(s) || !(pc >= 0 && pc <= 100) || !(sc >= 0 && sc <= 100)) return null;
+    return { ch, ds: d, s, pct: pc, best: bc, bestScore: sc };
+  } catch (e) { return null; }
+}
+const FRIEND = parseFriend();
+function resultUrl() {
+  const R = LAST_RESULT;
+  const base = (window.DAIYA_CONFIG && window.DAIYA_CONFIG.siteUrl) || (location.origin + location.pathname);
+  return base + "?r=" + [R.id, R.ds, R.s, R.pct, R.best, R.bestScore].join(".") + "#" + LANG;
+}
+function renderFriend(myDs, myA) {
+  const box = $("friend");
+  if (!FRIEND) { box.hidden = true; return; }
+  const u = U(), pk = P(), f = FRIEND, x = C(f.ch), b = C(f.best);
+  const strength = u.strength[{ s:"신강", w:"신약", b:"중화" }[f.s]];
+  let mine = "";
+  if ($("sampleTag").hidden) { // 내가 직접 결과를 냈을 때만 친구와의 궁합 표시
+    const rel = relation(myDs, f.ds), R = pk.rel[rel];
+    const sc = Math.max(5, Math.min(99, 50 + { hap:30, chung:-30, same:10, give:6, get:14, ctrl:-4, hit:-14 }[rel]));
+    mine = `<div class="friend-vs"><b>${esc(u.friendCompat)}</b> <span class="sc">${u.pts(sc)}</span>
+      <p>${esc(stemName(myDs))} × ${esc(stemName(f.ds))} · ${esc(R.k)}. ${esc(sc >= 60 ? R.g : R.b)}</p></div>`;
+  }
+  box.hidden = false;
+  box.innerHTML = `<span class="friend-label">${esc(u.friendT)}</span>
+    <div class="friend-main">${mini(x)}<div><div class="nm">${esc(x.name)}</div>
+      <div class="sub">${esc(stemName(f.ds))} · ${esc(strength)} · ${esc(u.friendPct(f.pct))}</div></div></div>
+    <div class="friend-best">${esc(u.good)} ${b.emoji} <b>${esc(b.name)}</b> ${u.pts(f.bestScore)}</div>
+    ${mine || `<button type="button" class="go friend-go" id="friendGo">${esc(u.tryMine)}</button>`}`;
+  const go = $("friendGo");
+  if (go) go.addEventListener("click", () => { $("bd").focus(); $("f").scrollIntoView({ behavior: "smooth", block: "center" }); track("friend_try_click", { lang: LANG }); });
+}
+$("copyLink").addEventListener("click", async () => {
+  if (!LAST_RESULT) return;
+  const url = resultUrl();
+  track("share_click", { channel: "copy", char: LAST_RESULT.id, lang: LANG });
+  try { await navigator.clipboard.writeText(url); $("shareNote").textContent = U().copied; }
+  catch (e) { $("shareNote").textContent = url; } // 복사가 막힌 브라우저: 링크를 직접 보여 줌
+  setTimeout(() => { if ($("shareNote").textContent === U().copied) $("shareNote").textContent = ""; }, 2500);
+});
+if (FRIEND) track("shared_link_open", { char: FRIEND.ch.id, lang: pickLang() });
 
 LANG = pickLang();
 applyStatic();

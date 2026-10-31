@@ -256,7 +256,7 @@ const PACK_EN = {
   },
   ui: {
     htmlLang:"en",
-    shareX:"Share on X (Twitter)", copyLink:"Copy link", copied:"Copied!",
+    shareX:"Share on X (Twitter)", copyLink:"Copy link", shareMine:"🔗 Copy my result link", friendT:"Your friend's result", friendPct:p=>`${p}% alike`, tryMine:"Try it yourself ↓", friendCompat:"You and your friend", copied:"Copied!",
     shareText:(n,stem,type)=>`My Ace of Diamond match by Saju is ${n}! (${stem}, ${type}) Try yours ⚾ #DaiyaSaju #AceOfDiamond`,
     cx:{
       h:"Saju compatibility reading", hint:"Tap any player to see your compatibility reading with them!",
