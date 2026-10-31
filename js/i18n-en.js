@@ -319,6 +319,7 @@ const PACK_EN = {
       over:["But it overflows, so you can lean toward stubbornness or trying to do it all alone.","But it overflows, so your words can run ahead or you burn out pouring everything at once.","But it overflows, so weighing results and gains can keep your mind busy.","But it overflows, so you can push yourself too hard or carry the burden alone.","But it overflows, so overthinking can slow you down or make you lean on others."],
       miss:["No Companion energy. You find strength when teammates run beside you.","No Output energy. Practicing putting your feelings into words gives you power.","No Wealth energy. You focus on process over gain — try setting goals in numbers.","No Authority energy. Free-spirited, so one rule you set yourself becomes great strength.","No Resource energy. You tend to solve things alone — learning to lean on others helps."],
       fill:(n,e)=>`${n}, full of ${e}, can fill it in for you.`,
+      allLean:e=>`No element is missing, but energy leans heavily toward ${e}, so the others are only lightly present.`,
       allT:"All five elements present", all:"A balanced chart that leans nowhere — a utility-player type who does the job in any position."
     },
     splitSib:(s,e,lab,p)=>`No player was born with a ${s} day stem, so we picked from players born under the same ${e} element. Your chart is <b>${lab}</b> (supporting energy ${p}%).`,

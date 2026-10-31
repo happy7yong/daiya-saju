@@ -56,7 +56,9 @@ function elReadHtml(p, ds, a) {
     + `<p class="key">${esc(x.dom[g])}</p>`
     + (el[top] / total >= 0.5 ? `<p>${esc(x.over[g])}</p>` : "") + `</div>`;
   const miss = el.map((v, i) => v ? -1 : i).filter(i => i >= 0);
-  if (!miss.length) return h + `<div class="er"><h5>✨ ${esc(x.allT)}</h5><p class="key">${esc(x.all)}</p></div>`;
+  if (!miss.length) return h + (el[top] / total >= 0.375
+    ? `<div class="er"><h5>✨ ${esc(x.allT)}</h5><p>${esc(x.allLean(u.el[top]))}</p></div>`
+    : `<div class="er"><h5>✨ ${esc(x.allT)}</h5><p class="key">${esc(x.all)}</p></div>`);
   miss.forEach(e => {
     const gm = gOf(e);
     const fill = CHARS.filter(c => c.real).reduce((b, c) => !b || c.ra.el[e] > b.ra.el[e] ? c : b, null);
