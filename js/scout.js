@@ -137,7 +137,7 @@ function personCard(R, title, rc, why) {
 let LAST = [1997, 8, 21, 9, 40, true, "next", true], LAST_R = null;
 // ===== 결과 공유 (생년월일은 넣지 않고 결과만) =====
 function shareUrl(R) {
-  const base = location.origin + location.pathname;
+  const base = location.origin + "/scout";
   const f = [R.school, R.pos, R.num, { 신강:"s", 중화:"b", 신약:"w" }[R.lab], R.mentor.c.id, R.mentor.score, R.rival.c.id, R.rival.score, R.partner.c.id, R.partner.score, R.ace.c.id, R.ace.score]
     .concat(R.room ? [R.room[0].c.id, R.room[1].c.id] : []);
   return base + "?sc=" + f.join(".") + "#" + LANG;
