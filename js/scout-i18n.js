@@ -1,5 +1,17 @@
 // ===== 스카우트 페이지 전용 문구 (선수 이름·오행·십성 이름은 기존 PACK_* 재사용) =====
 const SCOUT_KO = {
+  weaponL:"나의 무기", weaponRef:n=>`(${n} 계열)`,
+  weapon:{ P:[["공 끝이 살아 움직이는 무빙볼","타자 앞에서 춤추듯 변하는 공으로 범타를 유도해요."],["150km대 강속구","정면에서 힘으로 찍어 누르는 파워 피칭이에요."],["몸쪽을 찌르는 커터","배트 손잡이 쪽을 노려 땅볼을 만들어 내요."],["날카로운 고속 슬라이더","결정구 한 방으로 헛스윙을 뺏어요."],["완급 조절과 체인지업","타이밍을 빼앗아 타자를 요리해요."]],
+    H:[["부드러운 배트 컨트롤","어떤 공이든 받아쳐 빈 곳으로 보내요."],["초구부터 풀스윙","망설임 없는 장타로 분위기를 뒤집어요."],["찬스에 강한 클러치 타격","주자가 있을수록 집중력이 올라가요."],["빠른 발과 예리한 수비","한 베이스 더, 한 걸음 더로 흐름을 바꿔요."],["노림수 타격","상대 배터리의 볼배합을 읽고 노린 공을 쳐요."]] },
+  copy:"🔗 내 결과 링크 복사", copied:"링크를 복사했어요! 트위터에 붙여 넣어 보세요.",
+  friendT:"친구의 입학 결과", tryMine:"⚾ 나도 입부 신청하기",
+  hAce:"⚾ 라이벌 학교 에이스와의 맞대결", aceChip:"⚔️ 숙명의 상대",
+  aceDuelP:s=>`⚔️ 투수전 상대 (${s} 에이스)`, aceDuelH:s=>`⚔️ 타석에서 맞설 ${s} 에이스`,
+  aceWhy:{ chung:n=>`일간이 정면으로 부딪히는 충이에요. ${n}${jo(n,"과","와")}의 승부는 언제나 불꽃이 튀어요.`, hap:n=>`일간이 합이라 서로를 너무 잘 알아요. ${n}${jo(n,"은","는")} 적인데 묘하게 통하는 상대예요.`, hit:n=>`${n}의 기운이 나를 누르는 관계예요. 넘어서야 할 높은 벽이에요.`, ctrl:n=>`내 기운이 ${n}${jo(n,"을","를")} 누르는 관계예요. 공략 포인트가 보이는 상대예요.`, other:n=>`${n}${jo(n,"과","와")}는 서로를 의식하며 실력을 끌어올리는 숙명의 상대예요.` },
+  predL:"승부 예측", pred:{ chung:"한 번의 실수가 승부를 가르는 접전", hap:"끝까지 알 수 없는 명승부", hit:"상대 우세 · 이기면 한 단계 성장", ctrl:"내가 우세 · 방심만 하지 않으면", get:"상대 우세 · 배우면서 크는 승부", give:"내가 우세 · 하지만 한 방을 조심", same:"막상막하의 맞대결", other:"막상막하" },
+  hRoom:"🏠 청심료 룸메이트", roomNote:"세이도 기숙사 청심료에서 같은 방을 쓸 선배를 궁합으로 배정했어요.", roomT:["🛏️ 3학년 룸메이트","🛏️ 2학년 룸메이트"],
+  room:{ tetsu:n=>`장기 상대를 해 달라는 주장님과 같은 방. 실력은 꽝이지만 늘 진지해요.`, chris:n=>`조용히 데이터를 정리하는 선배와 같은 방. 물어보면 뭐든 차분히 알려 줘요.`, masuko:n=>`냉장고 속 푸딩은 절대 건드리면 안 되는 방. 그것만 지키면 세상 너그러운 선배예요.`, isashiki:n=>`소리 지르는 선배와 같은 방. 그런데 몰래 순정만화를 읽는다는 소문이…`, ryosuke:n=>`웃으며 독설을 날리는 선배와 같은 방. 긴장을 늦추면 바로 찔려요.`, miyauchi:n=>`밤마다 '후슈—' 콧김이 들리는 방. 묵직하고 든든한 선배예요.`,
+    miyuki:n=>`능글맞게 놀리는 선배와 같은 방. 의외로 맛있는 요리를 해 줄지도?`, kuramochi:n=>`게임 대결과 프로레슬링 기술이 기다리는 방. 사와무라가 겪은 바로 그 방이에요.`, kawakami:n=>`착하고 걱정 많은 선배와 같은 방. 시합 전날엔 같이 잠 못 들어요.`, shirasu:n=>`늘 정돈된 조용한 방. 말없이 챙겨 주는 상식인 선배예요.`, watanabe:n=>`상대 팀 영상이 계속 돌아가는 방. 같이 보다 보면 분석력이 쑥쑥 늘어요.` },
   more:"🔍 사주 풀이 상세보기",
   whyL:s=>`왜 ${s}?`,
   schoolReason:{ seido:p=>`관성·인성(나를 다잡고 키워 주는 기운)이 ${p}%예요. 좋은 지도자와 동료 속에서 노력으로 크는 세이도 스타일과 잘 맞아요.`,
@@ -45,6 +57,18 @@ const SCOUT_KO = {
 };
 
 const SCOUT_JA = {
+  weaponL:"あなたの武器", weaponRef:n=>`（${n}系）`,
+  weapon:{ P:[["球の終わりが生きて動くムービングボール","打者の手元で踊るように変化し、凡打を誘います。"],["150km台の剛速球","真っ向から力でねじ伏せるパワーピッチングです。"],["内角をえぐるカットボール","バットの根元を狙ってゴロを打たせます。"],["キレのある高速スライダー","決め球一つで空振りを奪います。"],["緩急とチェンジアップ","タイミングを外して打者を料理します。"]],
+    H:[["柔らかいバットコントロール","どんな球も打ち返して空いたところへ運びます。"],["初球からフルスイング","迷いのない長打で流れをひっくり返します。"],["チャンスに強いクラッチ打撃","ランナーがいるほど集中力が上がります。"],["俊足と鋭い守備","あと一つの塁、あと一歩で流れを変えます。"],["狙い球打ち","相手バッテリーの配球を読み、狙った球を打ちます。"]] },
+  copy:"🔗 結果のリンクをコピー", copied:"リンクをコピーしました！Xに貼り付けてみてください。",
+  friendT:"友だちの入学結果", tryMine:"⚾ 自分も入部届を出す",
+  hAce:"⚾ ライバル校エースとの対決", aceChip:"⚔️ 宿命の相手",
+  aceDuelP:s=>`⚔️ 投げ合う相手（${s}のエース）`, aceDuelH:s=>`⚔️ 打席で対決する${s}のエース`,
+  aceWhy:{ chung:n=>`日干が正面からぶつかる冲。${n}との勝負はいつも火花が散ります。`, hap:n=>`日干が合で、お互いをよく知りすぎている。${n}は敵なのに妙に通じ合う相手です。`, hit:n=>`${n}の気があなたを抑える関係。越えるべき高い壁です。`, ctrl:n=>`あなたの気が${n}を抑える関係。攻略のポイントが見える相手です。`, other:n=>`${n}とは互いを意識して実力を高め合う宿命の相手です。` },
+  predL:"勝負予想", pred:{ chung:"一つのミスが勝負を分ける接戦", hap:"最後までわからない名勝負", hit:"相手優勢・勝てば一段上へ", ctrl:"あなた優勢・油断さえしなければ", get:"相手優勢・学びながら伸びる勝負", give:"あなた優勢・ただし一発に注意", same:"互角の真っ向勝負", other:"互角" },
+  hRoom:"🏠 青心寮のルームメイト", roomNote:"青道の寮・青心寮で同じ部屋になる先輩を相性で割り当てました。", roomT:["🛏️ 3年生のルームメイト","🛏️ 2年生のルームメイト"],
+  room:{ tetsu:n=>`将棋の相手をせがむ主将と同じ部屋。腕前はからっきしでも、いつも真剣です。`, chris:n=>`静かにデータを整理する先輩と同じ部屋。聞けば何でも落ち着いて教えてくれます。`, masuko:n=>`冷蔵庫のプリンには絶対手を出してはいけない部屋。それさえ守れば心の広い先輩です。`, isashiki:n=>`よく吠える先輩と同じ部屋。でもこっそり少女マンガを読んでいるという噂が…`, ryosuke:n=>`笑顔で毒舌を飛ばす先輩と同じ部屋。気を抜くとすぐ刺されます。`, miyauchi:n=>`夜な夜な「フシュー」という鼻息が聞こえる部屋。どっしり頼れる先輩です。`,
+    miyuki:n=>`飄々とからかってくる先輩と同じ部屋。意外とおいしい料理を作ってくれるかも？`, kuramochi:n=>`ゲーム対決とプロレス技が待っている部屋。沢村が味わった、あの部屋です。`, kawakami:n=>`優しくて心配性の先輩と同じ部屋。試合前夜は一緒に眠れません。`, shirasu:n=>`いつも片付いた静かな部屋。黙って気にかけてくれる常識人の先輩です。`, watanabe:n=>`相手チームの映像がずっと流れている部屋。一緒に見ていると分析力がぐんぐん伸びます。` },
   more:"🔍 命式の相性を詳しく見る",
   whyL:s=>`なぜ${s}？`,
   schoolReason:{ seido:p=>`官星・印星（自分を引き締め育てる気）が${p}%。良い指導者と仲間の中で努力して伸びる青道スタイルに合っています。`,
@@ -90,6 +114,18 @@ const SCOUT_JA = {
 };
 
 const SCOUT_EN = {
+  weaponL:"Your weapon", weaponRef:n=>`(${n} style)`,
+  weapon:{ P:[["Moving ball with a living finish","Dances in front of the hitter and induces weak contact."],["150 km/h-class fastball","Power pitching that overpowers hitters head-on."],["Cutter that jams the inside","Aims at the bat handle to get grounders."],["Sharp high-speed slider","One put-away pitch steals the swing and miss."],["Change of pace and changeup","Steals the timing and cooks the hitter."]],
+    H:[["Soft bat control","Hits any pitch back into the open gaps."],["Full swing from the first pitch","Fearless extra-base power that flips the mood."],["Clutch hitting","The more runners on, the sharper your focus."],["Speed and sharp defense","One more base, one more step to change the flow."],["Sit-on-a-pitch hitting","Read the battery's sequence and hit the pitch you wanted."]] },
+  copy:"🔗 Copy my result link", copied:"Link copied! Paste it on X.",
+  friendT:"Your friend's enrollment", tryMine:"⚾ Join the team too",
+  hAce:"⚾ Showdown with a rival school's ace", aceChip:"⚔️ Destined rival",
+  aceDuelP:s=>`⚔️ Pitchers' duel (${s}'s ace)`, aceDuelH:s=>`⚔️ ${s}'s ace you'll face at the plate`,
+  aceWhy:{ chung:n=>`Your day stems clash head-on. Every battle with ${n} throws sparks.`, hap:n=>`Your day stems unite, so you know each other too well — ${n} is a foe you strangely click with.`, hit:n=>`${n}'s energy keeps yours in check — a high wall to climb.`, ctrl:n=>`Your energy keeps ${n}'s in check — you can see how to beat him.`, other:n=>`${n} is your destined rival; you raise each other's game.` },
+  predL:"Prediction", pred:{ chung:"A close game decided by one mistake", hap:"A classic that's anyone's game to the end", hit:"Edge: them · win and you level up", ctrl:"Edge: you · as long as you stay sharp", get:"Edge: them · a game you learn from", give:"Edge: you · but watch for the big swing", same:"Dead even, head to head", other:"Dead even" },
+  hRoom:"🏠 Seishin Dorm roommates", roomNote:"Your roommates in Seido's Seishin Dorm, assigned by compatibility.", roomT:["🛏️ Third-year roommate","🛏️ Second-year roommate"],
+  room:{ tetsu:n=>`Rooming with the captain who begs you to play shogi. Terrible at it, but always serious.`, chris:n=>`Rooming with a senior quietly organizing data. Ask anything and he'll calmly explain.`, masuko:n=>`Never touch the pudding in the fridge. Do that and he's the kindest senior around.`, isashiki:n=>`Rooming with a senior who yells a lot. But rumor says he secretly reads shojo manga…`, ryosuke:n=>`Rooming with a senior who smiles while roasting you. Let your guard down and you get stabbed.`, miyauchi:n=>`A room where you hear "fshhh" snorts every night. A solid, dependable senior.`,
+    miyuki:n=>`Rooming with a senior who teases you slyly. He might cook you something tasty, though.`, kuramochi:n=>`Game battles and pro-wrestling holds await — the very room Sawamura survived.`, kawakami:n=>`Rooming with a kind, anxious senior. Neither of you sleeps the night before a game.`, shirasu:n=>`An always-tidy, quiet room. A sensible senior who looks out for you without a word.`, watanabe:n=>`Opponent footage plays nonstop. Watch along and your analysis skills shoot up.` },
   more:"🔍 See the full Saju reading",
   whyL:s=>`Why ${s}?`,
   schoolReason:{ seido:p=>`Authority + Resource (the energies that discipline and nurture you) make up ${p}%. You fit Seido's style of growing through effort among good coaches and teammates.`,

@@ -68,6 +68,12 @@ const POS = {
   CF:  { ids:["isashiki","carlos","shirasu","toujou"],               partner:"CF", num:[8, 17, 27] }
 };
 const SCHOOLS = ["seido", "inashiro", "yakushi", "ichidai"];
+// 학교별 에이스 (맞대결 상대)
+const ACES = { seido:["eijun","furuya"], inashiro:["mei"], yakushi:["sanada"], ichidai:["amahisa"] };
+// 청심료 룸메이트 후보
+const ROOM3 = ["tetsu","chris","masuko","isashiki","ryosuke","miyauchi"], ROOM2 = ["miyuki","kuramochi","kawakami","shirasu","watanabe"];
+// 나의 무기: 투수는 결정구, 그 외는 타격·플레이 스타일 (가장 많은 오행 기준, 참고 선수)
+const WEAPON_REF = { P:["eijun","furuya","sanada","amahisa","mei"], H:["haruichi","raichi","tetsu","kuramochi","miyuki"] };
 // 1부 기준 나보다 학년이 위인 선수 (입학하는 나는 신입생)
 const SENIORS = ["tetsu","chris","masuko","isashiki","ryosuke","miyauchi","miyuki","kuramochi","kawakami","shirasu","sanada","mei","carlos"];
 
@@ -107,9 +113,18 @@ function scout(p) {
   let pool = SENIORS.filter(id => !used.includes(id) && byId(id).team === school);
   if (!pool.length) pool = SENIORS.filter(id => !used.includes(id));
   const mentor = pool.map(cs).sort((x, y) => (y.score + (y.rel === "get" ? 15 : 0)) - (x.score + (x.rel === "get" ? 15 : 0)))[0];
+  // 라이벌 학교 에이스: 다른 학교 에이스 중 충 > 합 > 극 관계 우선, 그다음 궁합 점수가 극단적인 쪽
+  const aceRb = { chung:30, hap:20, hit:12, ctrl:12 };
+  const ace = SCHOOLS.filter(k => k !== school).flatMap(k => ACES[k]).map(cs)
+    .sort((x, y) => ((aceRb[y.rel] || 0) + Math.abs(y.score - 50) * 0.3) - ((aceRb[x.rel] || 0) + Math.abs(x.score - 50) * 0.3))[0];
+  // 청심료 룸메이트 (세이도 입학 시): 3학년·2학년 각 1명, 선배·라이벌·짝꿍과 겹치지 않게
+  const taken = [mentor.c.id, rival.c.id, partner.c.id];
+  const pick = ids => { const l = ids.filter(id => !taken.includes(id)); return (l.length ? l : ids).map(cs).sort((x, y) => y.score - x.score)[0]; };
+  const room = school === "seido" ? [pick(ROOM3), pick(ROOM2)] : null;
+  const weapon = { kind: pos === "P" ? "P" : "H", el: domEl, ref: byId(WEAPON_REF[pos === "P" ? "P" : "H"][domEl]) };
   const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1] + r[2], ichidai: r[2] + r[1] };
   const why = s => S().schoolReason[s](Math.round(sp[s] * 100), s === "inashiro" ? a.support >= 0.55 : (domEl === 3 || domEl === 4));
-  return { why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
+  return { ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
 }
 
 function personCard(R, title, rc, why) {
@@ -119,7 +134,45 @@ function personCard(R, title, rc, why) {
     <p>${esc(why)}</p>${detailHtml(R, rc)}</div>`;
 }
 
-let LAST = [1997, 8, 21, 9, 40, true, "next", true];
+let LAST = [1997, 8, 21, 9, 40, true, "next", true], LAST_R = null;
+// ===== 결과 공유 (생년월일은 넣지 않고 결과만) =====
+function shareUrl(R) {
+  const base = location.origin + location.pathname;
+  const f = [R.school, R.pos, R.num, { 신강:"s", 중화:"b", 신약:"w" }[R.lab], R.mentor.c.id, R.mentor.score, R.rival.c.id, R.rival.score, R.partner.c.id, R.partner.score, R.ace.c.id, R.ace.score]
+    .concat(R.room ? [R.room[0].c.id, R.room[1].c.id] : []);
+  return base + "?sc=" + f.join(".") + "#" + LANG;
+}
+function parseFriend() {
+  try {
+    const v = new URLSearchParams(location.search).get("sc"); if (!v) return null;
+    const a = v.split(".");
+    const ok = id => byId(id) ? id : null;
+    if (!SCHOOLS.includes(a[0]) || !POS[a[1]]) return null;
+    const f = { school:a[0], pos:a[1], num:+a[2], lab:{ s:"신강", b:"중화", w:"신약" }[a[3]] || "중화",
+      mentor:[ok(a[4]), +a[5]], rival:[ok(a[6]), +a[7]], partner:[ok(a[8]), +a[9]], ace:[ok(a[10]), +a[11]], room:[ok(a[12]), ok(a[13])].filter(Boolean) };
+    if (![f.mentor, f.rival, f.partner, f.ace].every(x => x[0])) return null;
+    return f;
+  } catch (e) { return null; }
+}
+const FRIEND = parseFriend();
+function renderFriend() {
+  const box = $("friend"); if (!FRIEND) { box.hidden = true; return; }
+  const s = S(), f = FRIEND, nm = id => esc(C(byId(id)).name);
+  const chip = (t, [id, sc]) => `<span class="chip">${mini(C(byId(id)))}${esc(t)} ${nm(id)}${sc ? " · " + esc(s.pts(sc)) : ""}</span>`;
+  box.hidden = false;
+  box.innerHTML = `<span class="friend-label">${esc(s.friendT)}</span>
+    <div class="sc-fhead"><b class="sc-school ${f.school}">${esc(P().team[f.school])}</b> <span class="sc-fnum">#${f.num}</span> <span class="sc-fpos">${esc(s.pos[f.pos])}</span></div>
+    <div class="friend-others">${chip(s.mentorT, f.mentor)}${chip(s.rivalT, f.rival)}${chip(s.partnerT[f.pos], f.partner)}${chip(s.aceChip, f.ace)}${f.room.map(id => chip("🛏️", [id, 0])).join("")}</div>
+    <button type="button" class="go friend-go" id="friendGo">${esc(s.tryMine)}</button>`;
+  $("friendGo").addEventListener("click", () => { $("bd").focus(); $("f").scrollIntoView({ behavior: "smooth", block: "center" }); track("friend_try_click", { lang: LANG, page: "scout" }); });
+}
+document.addEventListener("click", async e => {
+  if (!e.target.closest("#copyLink") || !LAST_R) return;
+  const url = shareUrl(LAST_R);
+  track("share_click", { channel: "copy", page: "scout", school: LAST_R.school, lang: LANG });
+  try { await navigator.clipboard.writeText(url); $("shareNote").textContent = S().copied; } catch (er) { $("shareNote").textContent = url; }
+});
+document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("sc-more") && e.target.open) track("scout_detail_open", { lang: LANG }); }, true);
 function render(y, m, d, hh, mm, hasTime, zi, isSample) {
   LAST = [y, m, d, hh, mm, hasTime, zi, isSample];
   const s = S(), u = U(), pk = P();
@@ -138,13 +191,24 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
     <ul class="sc-rows">
       <li><span class="k">${esc(s.roleL)}</span><p><b>${esc(s.role[R.lab][0])}</b> · ${esc(s.role[R.lab][1])}</p></li>
       <li><span class="k">${esc(s.styleL)}</span><p>${esc(s.style[R.domEl])}</p></li>
-    </ul>`;
+      <li><span class="k">${esc(s.weaponL)}</span><p><b>${esc(s.weapon[R.weapon.kind][R.weapon.el][0])}</b> · ${esc(s.weapon[R.weapon.kind][R.weapon.el][1])} <span class="sc-ref">${esc(s.weaponRef(C(R.weapon.ref).name))}</span></p></li>
+    </ul>
+    <div class="sc-share"><button type="button" class="go sc-copy" id="copyLink">${esc(s.copy)}</button><span class="sc-note" id="shareNote"></span></div>`;
   $("scSchools").innerHTML = R.schools.map((x, i) => `<div class="bar${i === 0 ? " top" : ""}"><span>${teamTag(x.k)}</span><div class="track"><div class="fill" style="width:${x.pct}%"></div></div><span class="n">${x.pct}%</span></div>
     <p class="sc-sw"><b>${esc(s.schoolWhy[x.k])}</b> · ${esc(R.why(x.k))}</p>`).join("");
   const mn = C(R.mentor.c).name, rn = C(R.rival.c).name, pn = C(R.partner.c).name;
   const mWhy = R.mentor.rel === "get" ? s.mentorWhy.get(mn, u.el[R.mentor.c.rds >> 1]) : s.mentorWhy.other(mn);
   const rWhy = (s.rivalWhy[R.rival.rel] || s.rivalWhy.other)(rn);
   $("scPeople").innerHTML = personCard(R, s.mentorT, R.mentor, mWhy) + personCard(R, s.rivalT, R.rival, rWhy) + personCard(R, s.partnerT[R.pos], R.partner, s.partnerWhy(pn));
+  // 라이벌 학교 에이스 맞대결
+  const ac = C(R.ace.c), aceWho = R.pos === "P" ? s.aceDuelP : s.aceDuelH;
+  $("scAce").innerHTML = `<h2>${esc(s.hAce)}</h2>` + personCard(R, aceWho(pk.team[R.ace.c.team]), R.ace, (s.aceWhy[R.ace.rel] || s.aceWhy.other)(ac.name))
+    + `<p class="sc-pred">${esc(s.predL)} <b>${esc(s.pred[R.ace.rel] || s.pred.other)}</b></p>`;
+  // 청심료 룸메이트
+  $("scRoom").hidden = !R.room;
+  if (R.room) $("scRoom").innerHTML = `<h2>${esc(s.hRoom)}</h2><p class="split">${esc(s.roomNote)}</p><div class="sc-people">`
+    + R.room.map(rc => personCard(R, s.roomT[rc === R.room[0] ? 0 : 1], rc, s.room[rc.c.id](C(rc.c).name))).join("") + `</div>`;
+  LAST_R = R;
   $("scCoach").innerHTML = `<div class="sc-ct">${esc(s.coachT)}</div><blockquote>“${esc(s.coach[R.domG])} ${esc(R.school === "seido" ? s.coachTail[R.lab] : s.coachAway(schoolName))}”</blockquote>`;
   if (!isSample && !render.silent) track("scout_result", { school: R.school, pos: R.pos, lang: LANG });
 }
@@ -163,7 +227,7 @@ function setLang(l) {
   LANG = l;
   try { localStorage.setItem("daiya-lang", l); } catch (e) {}
   if (location.hash.replace("#", "") !== l) { try { history.replaceState(null, "", "#" + l); } catch (e) { location.hash = l; } }
-  applyStatic(); render.silent = true; render(...LAST); render.silent = false;
+  applyStatic(); renderFriend(); render.silent = true; render(...LAST); render.silent = false;
   track("lang_change", { lang: l, page: "scout" });
 }
 document.querySelectorAll(".langs button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
@@ -185,4 +249,6 @@ $("f").addEventListener("submit", e => {
 
 LANG = pickLang();
 applyStatic();
+renderFriend();
+if (FRIEND) track("shared_link_open", { lang: LANG, page: "scout", school: FRIEND.school });
 render(...LAST);
