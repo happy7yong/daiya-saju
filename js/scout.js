@@ -14,6 +14,48 @@ const $ = id => document.getElementById(id);
 function esc(s) { return String(s).replace(/[&<>"]/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" })[ch]); }
 const byId = id => CHARS.find(c => c.id === id);
 const mini = c => `<span class="mini" style="background:${c.color}">${c.emoji}</span>`;
+function godName(ds, stem) { const g = godOf(ds, stem); return U().gods[g.group][(ds % 2) === (stem % 2) ? 0 : 1]; }
+const lab2 = (r, e) => LANG === "ko" ? r + e : LANG === "ja" ? e : r + " " + e;
+function pillarHtml(p, ds, cols) {
+  const u = U();
+  return cols.map(([key, pil]) => {
+    const lab = u.pil[key];
+    if (!pil) return `<div class="pillar"><span class="lab">${lab}</span><div class="cell empty">${u.unknownTime}</div><div class="cell empty">${u.unknownTime}</div></div>`;
+    const se = pil[0] >> 1, be = BR_EL[pil[1]];
+    const sGod = key === "day" ? u.dayOnly : godName(ds, pil[0]);
+    return `<div class="pillar"><span class="lab">${lab}</span>
+      <div class="cell${key === "day" ? " me" : ""}"><span class="han e-${EL[se]}">${STEMS[pil[0]]}</span><span class="kor">${lab2(u.stemsR[pil[0]], u.el[se])}</span><span class="god">${sGod}</span></div>
+      <div class="cell"><span class="han e-${EL[be]}">${BRANCHES[pil[1]]}</span><span class="kor">${lab2(u.branchesR[pil[1]], u.el[be])}</span><span class="god">${godName(ds, BR_MAIN[pil[1]])}</span></div></div>`;
+  }).join("");
+}
+// 선수와의 궁합 상세 풀이 (기존 페이지 궁합 풀이와 같은 계산·문구)
+function detailHtml(R, rc) {
+  const u = U(), x = u.cx, pk = P(), t = C(rc.c), q = rc.parts, RR = pk.rel[rc.rel], p = R.p, a = R.a, ds = R.ds;
+  const pts = v => `<span class="pts ${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : ""}${v}</span>`;
+  const elList = arr => arr.map(i => (LANG === "en" ? "" : EL_H[i]) + (LANG === "ja" ? "" : (LANG === "en" ? u.el[i] : "(" + u.el[i] + ")"))).join(LANG === "ja" ? "・" : ", ");
+  const bLab = b => LANG === "ko" ? BRANCHES[b] + " " + BRANCHES_K[b] : LANG === "ja" ? BRANCHES[b] : u.branchesR[b] + " (" + BRANCHES[b] + ")";
+  const zLab = b => LANG === "ko" ? x.zod[b] + x.zodSuf : x.zod[b];
+  const sn = i => u.stemName(i);
+  const items = [[x.kDay, q.relPts, `<b>${esc(u.stemName(ds))}</b> × <b>${esc(u.stemName(t.rds))}</b> · ${esc(RR.k)}${LANG === "ja" ? "：" : ". "}${esc(RR.d)}`]];
+  let f = q.fillPts >= 3 ? x.fillSome : x.fillNone;
+  if (q.fillGood.length && q.fillBad.length) f = x.fillBoth(elList(q.fillGood), elList(q.fillBad));
+  else if (q.fillGood.length) f = x.fillGood(elList(q.fillGood));
+  else if (q.fillBad.length) f = x.fillBad(elList(q.fillBad));
+  if (q.fillYong.length) f += " " + x.yongNote(elList(q.fillYong), a.support < 0.45);
+  items.push([x.kFill, q.fillPts, esc(f)]);
+  if (q.johu) items.push([x.kJohu, q.johuPts, esc(x.johu[q.johu.season](elList([q.johu.el]), q.johuPts))]);
+  items.push([x.kDayB, q.dayPts, esc(x.br[q.dayRel](bLab(p.day[1]), bLab(t.real.day[1])))]);
+  items.push([x.kYear, q.yearPts, esc(x.br[q.yearRel](zLab(p.year[1]), zLab(t.real.year[1])))]);
+  if (q.hidden) items.push([x.kHidden, q.hiddenPts, esc(q.hidden.mine ? x.hiddenMine(sn(ds), x.slot[q.hidden.slot], sn(q.hidden.stem)) : x.hiddenTheirs(sn(t.rds), x.slot[q.hidden.slot], sn(q.hidden.stem)))]);
+  if (q.twin) items.push([x.kTwin, q.twinPts, esc(x.twin(LANG === "ko" ? STEMS_K[p.day[0]] + BRANCHES_K[p.day[1]] : STEMS[p.day[0]] + BRANCHES[p.day[1]]))]);
+  const g1 = godOf(ds, t.rds), g2 = godOf(t.rds, ds), par = (ds % 2) === (t.rds % 2) ? 0 : 1;
+  items.push([x.kGod, null, x.godLine(esc(t.name), u.gods[g1.group][par], esc(x.godDesc[GROUPS[g1.group]]), u.gods[g2.group][par], esc(x.godDesc[GROUPS[g2.group]]))]);
+  return `<details class="sc-more"><summary>${esc(S().more)}</summary>
+    <h4>${esc(x.theirs(t.name))}</h4>
+    <div class="pillars-scroll"><div class="pillars">${pillarHtml(t.real, t.rds, [["hour", null], ["day", t.real.day], ["month", t.real.month], ["year", t.real.year]])}</div></div>
+    <ul class="cx-list"><li><span class="k">${esc(x.base)}</span><span class="pts">50</span><p></p></li>${items.map(([k, v, txt]) => `<li><span class="k">${esc(k)}</span>${v == null ? "<span class=\"pts\"></span>" : pts(v)}<p>${txt}</p></li>`).join("")}</ul>
+    <p class="sc-total">${esc(x.total)} <b>${rc.score}</b> · ${esc(x.verdict(rc.score))}</p></details>`;
+}
 const teamTag = t => `<span class="team ${t}">${esc(P().team[t])}</span>`;
 
 // 포지션별 선수 (작중 포지션 기준)
@@ -65,14 +107,16 @@ function scout(p) {
   let pool = SENIORS.filter(id => !used.includes(id) && byId(id).team === school);
   if (!pool.length) pool = SENIORS.filter(id => !used.includes(id));
   const mentor = pool.map(cs).sort((x, y) => (y.score + (y.rel === "get" ? 15 : 0)) - (x.score + (x.rel === "get" ? 15 : 0)))[0];
-  return { p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
+  const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1] + r[2], ichidai: r[2] + r[1] };
+  const why = s => S().schoolReason[s](Math.round(sp[s] * 100), s === "inashiro" ? a.support >= 0.55 : (domEl === 3 || domEl === 4));
+  return { why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
 }
 
-function personCard(title, rc, why) {
+function personCard(R, title, rc, why) {
   const c = C(rc.c);
   return `<div class="sc-person"><div class="sc-pt">${esc(title)}</div>
     <div class="sc-pm">${mini(c)}<div><div class="nm">${esc(c.name)}</div><div class="sub">${teamTag(c.team)} ${esc(c.pos.replace(new RegExp("^" + P().team[c.team] + "\\s*[·・]\\s*"), ""))}</div></div><span class="sc-pts">${esc(S().pts(rc.score))}</span></div>
-    <p>${esc(why)}</p></div>`;
+    <p>${esc(why)}</p>${detailHtml(R, rc)}</div>`;
 }
 
 let LAST = [1997, 8, 21, 9, 40, true, "next", true];
@@ -87,6 +131,7 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
   $("scHero").innerHTML = `
     <div class="sc-admit">🏫 <b class="sc-school ${R.school}">${esc(schoolName)}</b> ${esc(s.admit)}</div>
     <div class="sc-uni"><span class="sc-num">${R.num}</span><span class="sc-numl">${esc(s.num(R.num))}</span></div>
+    <p class="sc-why"><b>${esc(s.whyL(schoolName))}</b> ${esc(R.why(R.school))}</p>
     <h3>${esc(s.pos[R.pos])}</h3>
     <p class="sc-chart">${esc(s.myChart(u.stemName(R.ds), u.strength[R.lab], pk.groups[GROUPS[R.domG]]))}</p>
     <p class="key">${esc(s.posWhy[R.pos])}</p>
@@ -95,11 +140,11 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
       <li><span class="k">${esc(s.styleL)}</span><p>${esc(s.style[R.domEl])}</p></li>
     </ul>`;
   $("scSchools").innerHTML = R.schools.map((x, i) => `<div class="bar${i === 0 ? " top" : ""}"><span>${teamTag(x.k)}</span><div class="track"><div class="fill" style="width:${x.pct}%"></div></div><span class="n">${x.pct}%</span></div>
-    <p class="sc-sw">${esc(s.schoolWhy[x.k])}</p>`).join("");
+    <p class="sc-sw"><b>${esc(s.schoolWhy[x.k])}</b> · ${esc(R.why(x.k))}</p>`).join("");
   const mn = C(R.mentor.c).name, rn = C(R.rival.c).name, pn = C(R.partner.c).name;
   const mWhy = R.mentor.rel === "get" ? s.mentorWhy.get(mn, u.el[R.mentor.c.rds >> 1]) : s.mentorWhy.other(mn);
   const rWhy = (s.rivalWhy[R.rival.rel] || s.rivalWhy.other)(rn);
-  $("scPeople").innerHTML = personCard(s.mentorT, R.mentor, mWhy) + personCard(s.rivalT, R.rival, rWhy) + personCard(s.partnerT[R.pos], R.partner, s.partnerWhy(pn));
+  $("scPeople").innerHTML = personCard(R, s.mentorT, R.mentor, mWhy) + personCard(R, s.rivalT, R.rival, rWhy) + personCard(R, s.partnerT[R.pos], R.partner, s.partnerWhy(pn));
   $("scCoach").innerHTML = `<div class="sc-ct">${esc(s.coachT)}</div><blockquote>“${esc(s.coach[R.domG])} ${esc(R.school === "seido" ? s.coachTail[R.lab] : s.coachAway(schoolName))}”</blockquote>`;
   if (!isSample && !render.silent) track("scout_result", { school: R.school, pos: R.pos, lang: LANG });
 }

@@ -1,5 +1,11 @@
 // ===== 스카우트 페이지 전용 문구 (선수 이름·오행·십성 이름은 기존 PACK_* 재사용) =====
 const SCOUT_KO = {
+  more:"🔍 사주 풀이 상세보기",
+  whyL:s=>`왜 ${s}?`,
+  schoolReason:{ seido:p=>`관성·인성(나를 다잡고 키워 주는 기운)이 ${p}%예요. 좋은 지도자와 동료 속에서 노력으로 크는 세이도 스타일과 잘 맞아요.`,
+    inashiro:(p,f)=>`비겁(나를 믿는 기운)이 ${p}%${f?"이고 사주에 힘도 넘쳐요":"예요"}. 자신감으로 정상을 노리는 왕자 이나시로 스타일이에요.`,
+    yakushi:p=>`식상·재성(표현하고 승부하는 기운)이 ${p}%예요. 개성 넘치는 타선이 마음껏 휘두르는 야쿠시 스타일이에요.`,
+    ichidai:(p,f)=>`재성·식상(판을 읽고 수를 쓰는 기운)이 ${p}%${f?"이고 금·수 기운이 많아 예리해요":"예요"}. 기교와 승부 감각의 이치다이산 스타일이에요.` },
   title:"내가 다이에이 세계에 입학한다면?",
   eyebrow:"사주로 보는 다이에이 입학 시뮬레이션 · 비공식 팬 테스트",
   h1a:"내가 다이에이 세계에", h1b:"입학한다면?",
@@ -39,6 +45,12 @@ const SCOUT_KO = {
 };
 
 const SCOUT_JA = {
+  more:"🔍 命式の相性を詳しく見る",
+  whyL:s=>`なぜ${s}？`,
+  schoolReason:{ seido:p=>`官星・印星（自分を引き締め育てる気）が${p}%。良い指導者と仲間の中で努力して伸びる青道スタイルに合っています。`,
+    inashiro:(p,f)=>`比劫（自分を信じる気）が${p}%${f?"で、命式の力もあふれています":""}。自信で頂点を狙う王者・稲実スタイルです。`,
+    yakushi:p=>`食傷・財星（表現して勝負する気）が${p}%。個性派打線が思い切り振り回す薬師スタイルです。`,
+    ichidai:(p,f)=>`財星・食傷（試合を読み手を打つ気）が${p}%${f?"で、金・水の気が多く鋭い":""}。技巧と勝負勘の市大三スタイルです。` },
   title:"もしダイヤのAの世界に入学したら？",
   eyebrow:"四柱推命で見るダイヤのA入学シミュレーション・非公式ファンテスト",
   h1a:"もしダイヤのAの世界に", h1b:"入学したら？",
@@ -78,6 +90,12 @@ const SCOUT_JA = {
 };
 
 const SCOUT_EN = {
+  more:"🔍 See the full Saju reading",
+  whyL:s=>`Why ${s}?`,
+  schoolReason:{ seido:p=>`Authority + Resource (the energies that discipline and nurture you) make up ${p}%. You fit Seido's style of growing through effort among good coaches and teammates.`,
+    inashiro:(p,f)=>`Companion (self-belief) makes up ${p}%${f?", and your chart runs strong":""}. That's Inashiro, the confident powerhouse aiming for the top.`,
+    yakushi:p=>`Output + Wealth (expression and competition) make up ${p}%. That's Yakushi, where a colorful lineup swings freely.`,
+    ichidai:(p,f)=>`Wealth + Output (reading the game and making moves) make up ${p}%${f?", sharpened by plenty of Metal and Water":""}. That's Ichidai San's craft and instinct.` },
   title:"If You Enrolled in the Ace of Diamond World",
   eyebrow:"An Ace of Diamond enrollment sim by Saju · Unofficial fan test",
   h1a:"If you enrolled in the", h1b:"Ace of Diamond world?",

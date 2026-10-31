@@ -4,7 +4,7 @@
 .sc-admit b { font-family: var(--font-head); font-size: 22px; color: #fff; padding: 2px 12px; border-radius: 10px; }
 .sc-school.seido { background: #1d2b6b; } .sc-school.inashiro { background: #4b5563; } .sc-school.yakushi { background: #b45309; } .sc-school.ichidai { background: #6d28d9; }
 .sc-uni { display: flex; align-items: center; gap: 12px; }
-.sc-num { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 16px; background: var(--ink); color: var(--gold);
+.sc-num { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 16px; background: #16224a; color: #f0c75a;
   font-family: var(--font-head); font-size: 40px; line-height: 1; }
 .sc-numl { font-size: 13px; color: var(--ink-soft); }
 .sc-hero h3 { margin: 0; font-family: var(--font-head); font-size: clamp(28px, 7.5vw, 42px); line-height: 1.15; }
@@ -22,11 +22,11 @@
 .sc-pm .mini { width: 48px; height: 48px; font-size: 24px; }
 .sc-pm .nm { font-family: var(--font-head); font-size: 19px; line-height: 1.2; }
 .sc-pm .sub { font-size: 12px; color: var(--ink-soft); }
-.sc-pts { font-size: 12px; font-weight: 700; background: var(--ink); color: var(--gold); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+.sc-pts { font-size: 12px; font-weight: 700; background: #16224a; color: #f0c75a; border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
 .sc-person p { margin: 0; font-size: 14px; line-height: 1.6; }
 
-.sc-coach { background: var(--ink); color: #fff; border-radius: 16px; padding: 16px 18px; }
-.sc-ct { font-size: 13px; color: var(--gold); margin-bottom: 6px; }
+.sc-coach { background: #16224a; color: #fff; border-radius: 16px; padding: 16px 18px; }
+.sc-ct { font-size: 13px; color: #f0c75a; margin-bottom: 6px; }
 .sc-coach blockquote { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.65; }
 
 .sc-schools { display: flex; flex-direction: column; gap: 4px; }
@@ -34,6 +34,17 @@
 .sc-schools .fill { background: var(--ink-soft); }
 .sc-schools .bar.top .fill { background: var(--accent); }
 .sc-schools .bar.top .n { color: var(--ink); font-weight: 700; }
-.sc-sw { margin: 0 0 8px 100px; font-size: 12px; color: var(--ink-soft); }
+.sc-sw { margin: 0 0 10px; line-height: 1.55; font-size: 12px; color: var(--ink-soft); }
 .sc-backwrap { text-align: center; margin: 8px 0; }
 .sc-back { display: inline-block; text-decoration: none; }
+.sc-why { margin: 0; font-size: 14px; line-height: 1.6; padding: 8px 12px; border-radius: 10px; background: var(--bg); }
+.sc-why b { color: var(--accent); margin-right: 4px; }
+.sc-sw b { color: var(--ink); font-weight: 600; }
+.sc-more { border-top: 1px dashed var(--line); padding-top: 8px; display: flex; flex-direction: column; gap: 10px; }
+.sc-more summary { cursor: pointer; font-size: 14px; font-weight: 700; color: var(--accent); list-style: none; padding: 6px 0; }
+.sc-more summary::-webkit-details-marker { display: none; }
+.sc-more[open] summary { margin-bottom: 4px; }
+.sc-more h4 { margin: 0; font-size: 13px; color: var(--ink-soft); font-weight: normal; }
+.sc-more .pillars { min-width: 280px; }
+.sc-total { margin: 0; font-size: 14px; padding: 8px 10px; border-radius: 10px; background: var(--bg); }
+.sc-total b { color: var(--accent); font-family: var(--font-head); font-size: 18px; }
