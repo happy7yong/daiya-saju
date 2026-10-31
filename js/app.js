@@ -83,7 +83,8 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   $("mAlias").innerHTML = teamTag(c) + esc(c.pos);
   $("mTag").textContent = c.tag;
   LAST_RESULT = { id: c.id, name: c.name, stem: stemName(c.stem), type: c.s > 0 ? u.strongType : u.weakType,
-    ds, s: a.strengthLabel === "신강" ? "s" : a.strengthLabel === "신약" ? "w" : "b", pct: pct(top.raw) };
+    ds, s: a.strengthLabel === "신강" ? "s" : a.strengthLabel === "신약" ? "w" : "b", pct: pct(top.raw),
+    others: ranked.slice(1, 4).map(r => [r.c.id, pct(r.raw)]) };
   $("shareBox").hidden = isSample;
   $("copyLink").textContent = u.shareMine;
   $("shareNote").textContent = "";
@@ -295,23 +296,28 @@ if ("IntersectionObserver" in window) {
 }
 
 // ===== 결과 카드 공유 (생년월일은 링크에 넣지 않음) =====
-// ?r=<선수id>.<일간0~9>.<s|w|b>.<닮음%>.<찰떡 배터리id>.<점수>
+// ?r=<선수id>.<일간0~9>.<s|w|b>.<닮음%>.<찰떡 배터리id>.<점수>[.<다음 닮은 선수id>.<%> ×3]
 function parseFriend() {
   try {
     const r = new URLSearchParams(location.search).get("r");
     if (!r) return null;
-    const [id, ds, s, p, bid, bs] = r.split(".");
+    const parts = r.split("."), [id, ds, s, p, bid, bs] = parts;
     const ch = CHARS.find(c => c.id === id), bc = CHARS.find(c => c.id === bid);
     const d = +ds, pc = +p, sc = +bs;
     if (!ch || !bc || !(d >= 0 && d <= 9) || !"swb".includes(s) || !(pc >= 0 && pc <= 100) || !(sc >= 0 && sc <= 100)) return null;
-    return { ch, ds: d, s, pct: pc, best: bc, bestScore: sc };
+    const others = [];
+    for (let i = 6; i + 1 < parts.length && others.length < 3; i += 2) {
+      const oc = CHARS.find(c => c.id === parts[i]), op = +parts[i + 1];
+      if (oc && op >= 0 && op <= 100) others.push([oc, op]);
+    }
+    return { ch, ds: d, s, pct: pc, best: bc, bestScore: sc, others };
   } catch (e) { return null; }
 }
 const FRIEND = parseFriend();
 function resultUrl() {
   const R = LAST_RESULT;
   const base = (window.DAIYA_CONFIG && window.DAIYA_CONFIG.siteUrl) || (location.origin + location.pathname);
-  return base + "?r=" + [R.id, R.ds, R.s, R.pct, R.best, R.bestScore].join(".") + "#" + LANG;
+  return base + "?r=" + [R.id, R.ds, R.s, R.pct, R.best, R.bestScore, ...R.others.flat()].join(".") + "#" + LANG;
 }
 function renderFriend(myDs, myA) {
   const box = $("friend");
@@ -330,6 +336,7 @@ function renderFriend(myDs, myA) {
     <div class="friend-main">${mini(x)}<div><div class="nm">${esc(x.name)}</div>
       <div class="sub">${esc(stemName(f.ds))} · ${esc(strength)} · ${esc(u.friendPct(f.pct))}</div></div></div>
     <div class="friend-best">${esc(u.good)} ${b.emoji} <b>${esc(b.name)}</b> ${u.pts(f.bestScore)}</div>
+    ${f.others.length ? `<div class="friend-others"><span>${esc(u.hOthers)}</span>${f.others.map(([oc, op]) => { const o = C(oc); return `<span class="chip">${mini(o)}${esc(o.name)} · ${op}%</span>`; }).join("")}</div>` : ""}
     ${mine || `<button type="button" class="go friend-go" id="friendGo">${esc(u.tryMine)}</button>`}`;
   const go = $("friendGo");
   if (go) go.addEventListener("click", () => { $("bd").focus(); $("f").scrollIntoView({ behavior: "smooth", block: "center" }); track("friend_try_click", { lang: LANG }); });
