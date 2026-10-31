@@ -43,6 +43,28 @@ function pillarHtml(p, ds, cols, other, plain) {
       <div class="cell"><span class="han e-${EL[be]}">${BRANCHES[pil[1]]}</span><span class="kor">${lab2(u.branchesR[pil[1]], u.el[be])}</span><span class="god">${bGod}</span></div></div>`;
   }).join("");
 }
+// 오행 풀이: 가장 많은 오행 / 없는 오행을 내 일간 기준 십성으로 읽기
+const EL_EMO = ["🌳","🔥","⛰️","⚔️","💧"];
+function elReadHtml(p, ds, a) {
+  const u = U(), x = u.elx, el = a.el, total = el.reduce((s, v) => s + v, 0);
+  const gOf = e => (e - (ds >> 1) + 5) % 5;
+  const mEl = BR_EL[p.month[1]];   // 동점이면 월지(계절) 기운 우선
+  const top = el.reduce((b, v, i) => v > el[b] || (v === el[b] && i === mEl) ? i : b, 0);
+  const g = gOf(top), pct = Math.round(el[top] / total * 100);
+  let h = `<div class="er"><h5>${EL_EMO[top]} ${esc(x.domT(u.el[top], pct, grpName(GROUPS[g])))}</h5>`
+    + `<p>${esc(x.lead(stemName(ds), u.el[top], grpName(GROUPS[g]), g === 0))} ${esc(x.dom[g])}`
+    + (el[top] / total >= 0.5 ? " " + esc(x.over[g]) : "") + `</p></div>`;
+  const miss = el.map((v, i) => v ? -1 : i).filter(i => i >= 0);
+  if (!miss.length) return h + `<div class="er"><h5>✨ ${esc(x.allT)}</h5><p>${esc(x.all)}</p></div>`;
+  miss.forEach(e => {
+    const gm = gOf(e);
+    const fill = CHARS.filter(c => c.real).reduce((b, c) => !b || c.ra.el[e] > b.ra.el[e] ? c : b, null);
+    h += `<div class="er miss"><h5>${EL_EMO[e]} ${esc(x.missT(u.el[e], grpName(GROUPS[gm])))}</h5>`
+      + `<p>${esc(x.miss[gm])} ${esc(x.fill(C(fill).name, u.el[e]))}</p></div>`;
+  });
+  return h;
+}
+
 function elBars(el) {
   const mx = Math.max(...el, 1), u = U();
   return el.map((v, i) => `<div class="bar"><span>${EL_H[i]} ${LANG === "ja" ? "" : u.el[i]}</span><div class="track"><div class="fill" style="width:${v / mx * 100}%;background:var(--${EL[i]})"></div></div><span class="n">${v}</span></div>`).join("");
@@ -140,6 +162,7 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   $("sgBars").innerHTML = GROUPS.map((g, i) => `<div class="bar" title="${esc(pk.gdesc[g])}"><span>${grpName(g)}</span><div class="track"><div class="fill" style="width:${a.ratio[i] * 100}%;background:var(--accent)"></div></div><span class="n">${Math.round(a.ratio[i] * 100)}%</span></div>`).join("");
   const domI = a.ratio.indexOf(Math.max(...a.ratio));
   $("strength").innerHTML = u.strengthLine(strLab(a.strengthLabel), Math.round(a.support * 100), grpName(GROUPS[domI]), pk.gdesc[GROUPS[domI]]);
+  $("elRead").innerHTML = elReadHtml(p, ds, a);
   const same = CHARS.filter(x => x.real && x.rds === ds).map(C);
   $("sameDay").innerHTML = same.length
     ? same.map(x => `<span class="chip">${mini(x)}${esc(u.chip(x.name, x.bday[1], x.bday[2]))}</span>`).join("")

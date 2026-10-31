@@ -311,6 +311,16 @@ const PACK_EN = {
     sameStrength:l=>`Both charts are ${l}, so you use your strength in a similar way.`,
     splitR:(s,names,lab,p)=>`Players born with a ${s} day stem: ${names}. Your chart is <b>${lab}</b> (supporting energy ${p}%).`,
     rare:"A rare energy missing from the team",
+    elx:{
+      domT:(e,p,g)=>`Most abundant: ${e} ${p}% · ${g}`,
+      missT:(e,g)=>`Missing: ${e} · ${g}`,
+      lead:(s,e,g,same)=>same?`${e}, the same element as your ${s} day stem, fills most of your chart.`:`Your day stem is ${s}, but what fills most of your chart is ${e} — ${g} to you.`,
+      dom:["Clear-minded and hates to lose — the type who grows faster with a rival.","Overflowing with expression and flair — the type who shows it through play, not words.","Quick with practical sense and calculation — a catcher-like type who reads the game and enjoys the battle.","Responsibility and discipline in your bones — the type who doesn't shy from the weight of captain or ace.","Great at absorbing by watching — the type who grows fast beside a good mentor."],
+      over:["But it overflows, so you can lean toward stubbornness or trying to do it all alone.","But it overflows, so your words can run ahead or you burn out pouring everything at once.","But it overflows, so weighing results and gains can keep your mind busy.","But it overflows, so you can push yourself too hard or carry the burden alone.","But it overflows, so overthinking can slow you down or make you lean on others."],
+      miss:["No Companion energy. You find strength when teammates run beside you.","No Output energy. Practicing putting your feelings into words gives you power.","No Wealth energy. You focus on process over gain — try setting goals in numbers.","No Authority energy. Free-spirited, so one rule you set yourself becomes great strength.","No Resource energy. You tend to solve things alone — learning to lean on others helps."],
+      fill:(n,e)=>`${n}, full of ${e}, can fill it in for you.`,
+      allT:"All five elements present", all:"A balanced chart that leans nowhere — a utility-player type who does the job in any position."
+    },
     splitSib:(s,e,lab,p)=>`No player was born with a ${s} day stem, so we picked from players born under the same ${e} element. Your chart is <b>${lab}</b> (supporting energy ${p}%).`,
     splitNone:(s,lab,p)=>`No player was born with a ${s} day stem, so we picked the one whose chart is most alike. Your chart is <b>${lab}</b> (supporting energy ${p}%).`,
     shareX:"Share on X (Twitter)", copyLink:"Copy link", shareMine:"🔗 Copy my result link", friendTop:"Best chemistry TOP 3", friendT:"Your friend's result", friendPct:p=>`${p}% alike`, tryMine:"Try it yourself ↓", friendCompat:"You and your friend", copied:"Copied!",
