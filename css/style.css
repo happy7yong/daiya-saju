@@ -156,6 +156,10 @@ button.go:hover { transform: translateY(-2px); }
 .er.miss { border-style: dashed; }
 .er h5 { margin: 0 0 4px; font-size: 14px; }
 .er p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+.er p + p { margin-top: 6px; }
+.er p.key { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.55; }
+.er p.fillp { font-size: 14px; font-weight: 600; color: var(--ink); background: var(--accent-soft, rgba(200,16,46,.08)); border-radius: 8px; padding: 6px 10px; }
+.er p.fillp b { color: var(--accent); }
 .strength b { font-family: var(--font-head); font-weight: normal; font-size: 18px; }
 
 /* others */

@@ -52,15 +52,17 @@ function elReadHtml(p, ds, a) {
   const top = el.reduce((b, v, i) => v > el[b] || (v === el[b] && i === mEl) ? i : b, 0);
   const g = gOf(top), pct = Math.round(el[top] / total * 100);
   let h = `<div class="er"><h5>${EL_EMO[top]} ${esc(x.domT(u.el[top], pct, grpName(GROUPS[g])))}</h5>`
-    + `<p>${esc(x.lead(stemName(ds), u.el[top], grpName(GROUPS[g]), g === 0))} ${esc(x.dom[g])}`
-    + (el[top] / total >= 0.5 ? " " + esc(x.over[g]) : "") + `</p></div>`;
+    + `<p>${esc(x.lead(stemName(ds), u.el[top], grpName(GROUPS[g]), g === 0))}</p>`
+    + `<p class="key">${esc(x.dom[g])}</p>`
+    + (el[top] / total >= 0.5 ? `<p>${esc(x.over[g])}</p>` : "") + `</div>`;
   const miss = el.map((v, i) => v ? -1 : i).filter(i => i >= 0);
-  if (!miss.length) return h + `<div class="er"><h5>✨ ${esc(x.allT)}</h5><p>${esc(x.all)}</p></div>`;
+  if (!miss.length) return h + `<div class="er"><h5>✨ ${esc(x.allT)}</h5><p class="key">${esc(x.all)}</p></div>`;
   miss.forEach(e => {
     const gm = gOf(e);
     const fill = CHARS.filter(c => c.real).reduce((b, c) => !b || c.ra.el[e] > b.ra.el[e] ? c : b, null);
     h += `<div class="er miss"><h5>${EL_EMO[e]} ${esc(x.missT(u.el[e], grpName(GROUPS[gm])))}</h5>`
-      + `<p>${esc(x.miss[gm])} ${esc(x.fill(C(fill).name, u.el[e]))}</p></div>`;
+      + `<p>${esc(x.miss[gm])}</p>`
+      + `<p class="fillp">🤝 ${esc(x.fill(C(fill).name, u.el[e])).replace(esc(C(fill).name), `<b>${esc(C(fill).name)}</b>`)}</p></div>`;
   });
   return h;
 }
