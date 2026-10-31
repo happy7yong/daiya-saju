@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>사주로 찾는 나의 다이아몬드 에이스</title>
+<meta name="description" content="생년월일로 사주를 풀어 다이아몬드 에이스(ダイヤのA) 선수 20명 중 나와 닮은 선수와 궁합을 찾아보는 비공식 팬 테스트. 한국어·日本語·English.">
+<meta name="theme-color" content="#16224a">
+<!-- 공유 카드: 배포 주소가 정해지면 og:url·og:image를 절대 경로로 바꿔 주세요 (README 참고) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="사주로 찾는 나의 다이아몬드 에이스">
+<meta property="og:description" content="내 사주와 닮은 다이에이 선수는? 일간·신강약으로 매칭하고, 선수 공식 생일 사주로 궁합까지.">
+<meta property="og:image" content="assets/og.png">
+<meta property="og:url" content="">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="사주로 찾는 나의 다이아몬드 에이스">
+<meta name="twitter:description" content="내 사주와 닮은 다이에이 선수는? 궁합까지 풀어 드려요.">
+<meta name="twitter:image" content="assets/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Serif+KR:wght@500;700&family=Zen+Maru+Gothic:wght@500;900&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/config.js"></script>
+<script src="js/analytics.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="langs" aria-label="Language">
+    <button type="button" data-lang="ko">한국어</button>
+    <button type="button" data-lang="ja">日本語</button>
+    <button type="button" data-lang="en">English</button>
+  </nav>
+  <header>
+    <span class="eyebrow" id="u-eyebrow"></span>
+    <h1><span id="u-h1a"></span><br><em id="u-h1b"></em></h1>
+    <p class="lede" id="u-lede"></p>
+  </header>
+
+  <details class="intro" id="intro" hidden open>
+    <summary id="u-introT"></summary>
+    <div id="u-intro"></div>
+  </details>
+
+  <form id="f" novalidate>
+    <div class="field">
+      <label for="bd" id="u-bd"></label>
+      <input id="bd" type="date" value="1997-08-21" min="1900-01-01" max="2100-12-31" required>
+    </div>
+    <div class="field">
+      <label for="bt" id="u-bt"></label>
+      <input id="bt" type="time" value="09:40">
+    </div>
+    <div class="field">
+      <label for="zi" id="u-zi"></label>
+      <select id="zi">
+        <option value="next" id="u-ziNext"></option>
+        <option value="same" id="u-ziSame"></option>
+      </select>
+    </div>
+    <label class="field check" for="nt"><input id="nt" type="checkbox"> <span id="u-nt"></span></label>
+    <p class="err" id="err" hidden></p>
+    <div class="form-foot">
+      <p class="hint" id="u-hint"></p>
+      <button class="go" type="submit" id="u-go"></button>
+    </div>
+  </form>
+
+  <section class="section" id="result" aria-live="polite">
+    <span class="sample-tag" id="sampleTag"></span>
+    <div class="match">
+      <div class="ball"><div class="avatar" id="av"><span id="avEmoji"></span></div><span class="pct" id="avPct"></span></div>
+      <div class="match-text">
+        <span class="you-are" id="u-youAre"></span>
+        <h3 id="mName"></h3>
+        <span class="alias" id="mAlias"></span>
+        <p class="tagline" id="mTag"></p>
+        <div class="share">
+          <button type="button" class="share-x" id="shareX"></button>
+          <button type="button" class="share-copy" id="copyLink"></button>
+        </div>
+      </div>
+    </div>
+    <p class="split" id="split"></p>
+    <ul class="reasons" id="reasons"></ul>
+    <div class="traits">
+      <div><h4 id="u-tChar"></h4><ul id="tChar"></ul></div>
+      <div><h4 id="u-tEp"></h4><ul id="tEp"></ul></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 id="u-hBirth"></h2>
+    <div class="birth" id="birth"></div>
+  </section>
+
+  <hr class="seam">
+
+  <section class="section">
+    <h2 id="u-hMine"></h2>
+    <div class="pillars-scroll"><div class="pillars" id="pillars"></div></div>
+    <div class="bars">
+      <div class="barset"><h4 id="u-ohT"></h4><div id="ohBars"></div></div>
+      <div class="barset"><h4 id="u-sgT"></h4><div id="sgBars"></div></div>
+    </div>
+    <p class="strength" id="strength"></p>
+    <div class="barset">
+      <h4 id="u-sameT"></h4>
+      <div class="same" id="sameDay"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 id="u-hOthers"></h2>
+    <div class="others" id="others"></div>
+  </section>
+
+  <section class="section">
+    <h2 id="u-hPairs"></h2>
+    <p class="split" id="u-pairNote"></p>
+    <div class="pairs">
+      <div class="pair good" id="pGood"></div>
+      <div class="pair bad" id="pBad"></div>
+    </div>
+    <div class="cpx" id="cpx"></div>
+    <div class="barset">
+      <h4 id="u-chemT"></h4>
+      <p class="split" id="u-cxHint"></p>
+      <div class="chem" id="chem"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 id="u-hDex"></h2>
+    <details class="dex">
+      <summary id="u-dexSum"></summary>
+      <div class="dex-scroll"><table class="dex-t" id="dex"></table></div>
+    </details>
+  </section>
+
+  <div class="note" id="u-notes"></div>
+</div>
+
+<!-- 순서 중요: 엔진 → 데이터 → 궁합 → 번역 → 화면 -->
+<script src="js/saju-engine.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/chemistry-ko.js"></script>
+<script src="js/compat.js"></script>
+<script src="js/i18n-ko.js"></script>
+<script src="js/i18n-ja.js"></script>
+<script src="js/i18n-en.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
