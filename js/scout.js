@@ -74,6 +74,8 @@ const ACES = { seido:["eijun","furuya"], inashiro:["mei"], yakushi:["sanada"], i
 const ROOM3 = ["tetsu","chris","masuko","isashiki","ryosuke","miyauchi"], ROOM2 = ["miyuki","kuramochi","kawakami","shirasu","watanabe"];
 // 나의 무기: 투수는 결정구, 그 외는 타격·플레이 스타일 (가장 많은 오행 기준, 참고 선수)
 const WEAPON_REF = { P:["eijun","furuya","sanada","amahisa","mei"], H:["haruichi","raichi","tetsu","kuramochi","miyuki"] };
+// 1부 기준 같은 1학년 동기
+const BUDDIES = ["eijun","furuya","haruichi","kanemaru","toujou"];
 // 1부 기준 나보다 학년이 위인 선수 (입학하는 나는 신입생)
 const SENIORS = ["tetsu","chris","masuko","isashiki","ryosuke","miyauchi","miyuki","kuramochi","kawakami","shirasu","sanada","mei","carlos"];
 
@@ -92,6 +94,8 @@ function scout(p) {
   // 학교 = 십성 비중을 그대로 나눠 가짐 (세이도: 관성+인성, 이나시로: 비겁, 야쿠시: 식상, 이치다이산: 재성 → 합 100%)
   const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1], ichidai: r[2] };
   const schools = SCHOOLS.map(k => ({ k, v: sp[k], pct: Math.round(sp[k] * 100) })).sort((x, y) => y.v - x.v);
+  // 지옥 훈련: 가장 많은 오행 = 자신 있는 훈련, 가장 적은 오행 = 영혼 가출 훈련
+  const lowEl = a.el.reduce((b, v, i) => i !== domEl && (b < 0 || v < a.el[b]) ? i : b, -1);
   const offer = schools[0].k, school = "seido"; // 제안은 가장 높은 학교, 입학은 항상 세이도
   // 궁합 (공용 compatOne)
   const real = CHARS.filter(c => c.real);
@@ -118,7 +122,10 @@ function scout(p) {
   */ const room = null;
   const weapon = { kind: pos === "P" ? "P" : "H", el: domEl, ref: byId(WEAPON_REF[pos === "P" ? "P" : "H"][domEl]) };
   const why = s => S().schoolReason[s](Math.round(sp[s] * 100), s === "inashiro" ? a.support >= 0.55 : (domEl === 3 || domEl === 4));
-  return { offer, ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
+  // 같이 크는 동기: 라이벌·짝꿍 제외, 합·같은 오행·생 관계 우대
+  const bb = { hap:12, same:8, get:6, give:6 };
+  const buddy = BUDDIES.filter(id => id !== rival.c.id && id !== partner.c.id).map(cs).sort((x, y) => (y.score + (bb[y.rel] || 0)) - (x.score + (bb[x.rel] || 0)))[0];
+  return { lowEl, buddy, offer, ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
 }
 
 function personCard(R, title, rc, why) {
@@ -132,7 +139,7 @@ let LAST = [1997, 8, 21, 9, 40, true, "next", true], LAST_R = null;
 // ===== 결과 공유 (생년월일은 넣지 않고 결과만) =====
 function shareUrl(R) {
   const base = location.origin + "/scout";
-  const f = [R.offer, R.pos, R.num, { 신강:"s", 중화:"b", 신약:"w" }[R.lab], R.mentor.c.id, R.mentor.score, R.rival.c.id, R.rival.score, R.partner.c.id, R.partner.score, R.ace.c.id, R.ace.score]
+  const f = [R.offer, R.pos, R.num, { 신강:"s", 중화:"b", 신약:"w" }[R.lab], R.mentor.c.id, R.mentor.score, R.rival.c.id, R.rival.score, R.partner.c.id, R.partner.score, R.ace.c.id, R.ace.score, R.buddy.c.id, R.buddy.score]
 ;
   return base + "?sc=" + f.join(".") + "#" + LANG;
 }
@@ -143,7 +150,7 @@ function parseFriend() {
     const ok = id => byId(id) ? id : null;
     if (!SCHOOLS.includes(a[0]) || !POS[a[1]]) return null;
     const f = { offer:a[0], pos:a[1], num:+a[2], lab:{ s:"신강", b:"중화", w:"신약" }[a[3]] || "중화",
-      mentor:[ok(a[4]), +a[5]], rival:[ok(a[6]), +a[7]], partner:[ok(a[8]), +a[9]], ace:[ok(a[10]), +a[11]] };
+      mentor:[ok(a[4]), +a[5]], rival:[ok(a[6]), +a[7]], partner:[ok(a[8]), +a[9]], ace:[ok(a[10]), +a[11]], buddy:[ok(a[12]), +a[13]] };
     if (![f.mentor, f.rival, f.partner, f.ace].every(x => x[0])) return null;
     return f;
   } catch (e) { return null; }
@@ -156,7 +163,7 @@ function renderFriend() {
   box.hidden = false;
   box.innerHTML = `<span class="friend-label">${esc(s.friendT)}</span>
     <div class="sc-fhead"><b class="sc-school seido">${esc(P().team.seido)}</b> <span class="sc-fnum">#${f.num}</span> <span class="sc-fpos">${esc(s.pos[f.pos])}</span></div>
-    <div class="friend-others">${chip(s.mentorT, f.mentor)}${chip(s.rivalT, f.rival)}${chip(s.partnerT[f.pos], f.partner)}${chip(s.aceChip, f.ace)}${f.offer !== "seido" ? `<span class="chip">📨 ${esc(s.offerChip(P().team[f.offer]))}</span>` : ""}</div>
+    <div class="friend-others">${chip(s.mentorT, f.mentor)}${chip(s.rivalT, f.rival)}${chip(s.partnerT[f.pos], f.partner)}${f.buddy[0] ? chip(s.buddyT, f.buddy) : ""}${chip(s.aceChip, f.ace)}${f.offer !== "seido" ? `<span class="chip">📨 ${esc(s.offerChip(P().team[f.offer]))}</span>` : ""}</div>
     <button type="button" class="go friend-go" id="friendGo">${esc(s.tryMine)}</button>`;
   $("friendGo").addEventListener("click", () => { $("bd").focus(); $("f").scrollIntoView({ behavior: "smooth", block: "center" }); track("friend_try_click", { lang: LANG, page: "scout" }); });
 }
@@ -193,7 +200,13 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
   const mn = C(R.mentor.c).name, rn = C(R.rival.c).name, pn = C(R.partner.c).name;
   const mWhy = R.mentor.rel === "get" ? s.mentorWhy.get(mn, u.el[R.mentor.c.rds >> 1]) : s.mentorWhy.other(mn);
   const rWhy = (s.rivalWhy[R.rival.rel] || s.rivalWhy.other)(rn);
-  $("scPeople").innerHTML = personCard(R, s.mentorT, R.mentor, mWhy) + personCard(R, s.rivalT, R.rival, rWhy) + personCard(R, s.partnerT[R.pos], R.partner, s.partnerWhy(pn));
+  $("scPeople").innerHTML = personCard(R, s.mentorT, R.mentor, mWhy) + personCard(R, s.rivalT, R.rival, rWhy) + personCard(R, s.partnerT[R.pos], R.partner, s.partnerWhy(pn))
+    + personCard(R, s.buddyT, R.buddy, (s.buddyWhy[R.buddy.rel] || s.buddyWhy.other)(C(R.buddy.c).name) + " " + s.buddyLine[R.buddy.c.id]);
+  // 세이도 지옥 훈련
+  $("scTrain").innerHTML = `<h2>${esc(s.hTrain)}</h2><div class="sc-train">
+    <div class="sc-tr good"><span class="sc-tk">${esc(s.trainGood)}</span><b>${esc(s.menu[R.domEl])}</b><p>${esc(s.good[R.domEl])}</p><span class="sc-tw">${esc(s.trainWhyGood(u.el[R.domEl]))}</span></div>
+    <div class="sc-tr bad"><span class="sc-tk">${esc(s.trainBad)}</span><b>${esc(s.menu[R.lowEl])}</b><p>${esc(s.bad[R.lowEl])}</p><span class="sc-tw">${esc(s.trainWhyBad(u.el[R.lowEl]))}</span></div>
+    <p class="sc-camp"><b>${esc(s.campL)}</b> ${esc(s.camp[R.lab])}</p></div>`;
   // 라이벌 학교 에이스 맞대결
   const ac = C(R.ace.c), aceWho = R.pos === "P" ? s.aceDuelP : s.aceDuelH;
   $("scAce").innerHTML = `<h2>${esc(s.hAce)}</h2>` + personCard(R, aceWho(pk.team[R.ace.c.team]), R.ace, (s.aceWhy[R.ace.rel] || s.aceWhy.other)(ac.name))

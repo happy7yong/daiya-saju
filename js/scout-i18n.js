@@ -1,5 +1,14 @@
 // ===== 스카우트 페이지 전용 문구 (선수 이름·오행·십성 이름은 기존 PACK_* 재사용) =====
 const SCOUT_KO = {
+  buddyT:"👬 같이 크는 동기",
+  buddyWhy:{ hap:n=>`일간이 합이라 처음 만났는데도 이상하게 편한 동기예요.`, same:n=>`같은 오행이라 생각하는 게 닮았어요. 말 안 해도 통하는 동기예요.`, get:n=>`${n}의 기운이 나를 받쳐 줘요. 힘들 때 옆에 있으면 힘이 나는 동기예요.`, give:n=>`내 기운이 ${n}${jo(n,"을","를")} 살려 줘요. 내가 챙겨 주면서 같이 크는 동기예요.`, other:n=>`동기 중 궁합이 가장 좋아요. 힘들 때마다 옆에 있는 친구예요.` },
+  buddyLine:{ eijun:"밤마다 같이 타이어 끌고 뛰는 사이!", furuya:"말없이 나란히 러닝하다 어느새 친해진 사이!", haruichi:"둘만 남아서 배팅 연습하는 사이!", kanemaru:"시험 기간엔 카네마루가 공부를 봐 주는 사이!", toujou:"고민이 생기면 제일 먼저 털어놓는 사이!" },
+  hTrain:"🏋️ 세이도 지옥 훈련", trainGood:"💪 자신 있는 훈련", trainBad:"😵 영혼 가출 훈련",
+  trainWhyGood:e=>`${e} 기운이 가장 많아서`, trainWhyBad:e=>`${e} 기운이 가장 적어서`,
+  menu:["야간 자율 스윙","타이어 끌기 러닝","밥 세 공기 의무","카타오카 감독의 펑고 지옥","상대 팀 비디오 분석"],
+  good:["매일 밤 혼자 남아 수백 번 휘둘러도 질리지 않아요.","타이어 두 개도 거뜬, 끌수록 신나요.","밥 세 공기는 기본, 한 공기 더 주세요.","쏟아지는 공을 다 받아 내다 보면 오히려 개운해요.","영상 속 상대 버릇을 찾아내는 게 제일 재밌어요."],
+  bad:["졸린 눈으로 휘두르다 배트가 날아갈 뻔…","세 바퀴째부터는 타이어가 나를 끌고 가요.","두 공기째부터 젓가락이 멈춰요. 선배 눈치 보며 꾸역꾸역…","펑고 100개째, 영혼은 이미 외야 밖으로 가출.","영상 틀자마자 꾸벅꾸벅… 정신 차려 보니 엔딩 크레딧."],
+  campL:"여름 합숙:", camp:{ 신강:"끝까지 서 있는 최후의 1인. 선배들도 혀를 내둘러요.", 중화:"지쳐도 페이스 조절로 끝까지 완주해요.", 신약:"첫날 쓰러지지만 다음 날 또 나오는 근성파예요." },
   weaponL:"나의 무기", weaponRef:n=>`(${n} 계열)`,
   weapon:{ P:[["공 끝이 살아 움직이는 무빙볼","타자 앞에서 춤추듯 변하는 공으로 범타를 유도해요."],["150km대 강속구","정면에서 힘으로 찍어 누르는 파워 피칭이에요."],["몸쪽을 찌르는 커터","배트 손잡이 쪽을 노려 땅볼을 만들어 내요."],["날카로운 고속 슬라이더","결정구 한 방으로 헛스윙을 뺏어요."],["완급 조절과 체인지업","타이밍을 빼앗아 타자를 요리해요."]],
     H:[["부드러운 배트 컨트롤","어떤 공이든 받아쳐 빈 곳으로 보내요."],["초구부터 풀스윙","망설임 없는 장타로 분위기를 뒤집어요."],["찬스에 강한 클러치 타격","주자가 있을수록 집중력이 올라가요."],["빠른 발과 예리한 수비","한 베이스 더, 한 걸음 더로 흐름을 바꿔요."],["노림수 타격","상대 배터리의 볼배합을 읽고 노린 공을 쳐요."]] },
@@ -55,6 +64,15 @@ const SCOUT_KO = {
 };
 
 const SCOUT_JA = {
+  buddyT:"👬 一緒に伸びる同期",
+  buddyWhy:{ hap:n=>`日干が合で、初対面なのに妙に落ち着く同期です。`, same:n=>`同じ五行で考え方が似ています。言わなくても通じる同期です。`, get:n=>`${n}の気があなたを支えます。つらいとき隣にいると力が湧く同期です。`, give:n=>`あなたの気が${n}を生かします。世話を焼きながら一緒に伸びる同期です。`, other:n=>`同期の中でいちばん相性がいい。つらいときいつも隣にいる仲間です。` },
+  buddyLine:{ eijun:"毎晩一緒にタイヤを引いて走る仲！", furuya:"黙って並んで走っているうちに仲良くなった仲！", haruichi:"二人で居残りバッティング練習する仲！", kanemaru:"テスト前は金丸に勉強を見てもらう仲！", toujou:"悩みができたら真っ先に打ち明ける仲！" },
+  hTrain:"🏋️ 青道の地獄の練習", trainGood:"💪 得意な練習", trainBad:"😵 魂が抜ける練習",
+  trainWhyGood:e=>`${e}の気がいちばん多いから`, trainWhyBad:e=>`${e}の気がいちばん少ないから`,
+  menu:["夜の自主スイング","タイヤ引きランニング","ご飯どんぶり3杯","片岡監督の地獄のノック","相手チームのビデオ分析"],
+  good:["毎晩一人で何百回振っても飽きません。","タイヤ二つでも平気、引くほど楽しくなります。","ご飯3杯は基本、おかわりください。","降り注ぐ打球を全部さばくと、むしろスッキリします。","映像から相手のクセを見つけるのがいちばん楽しい。"],
+  bad:["眠い目で振っていたらバットが飛んでいきそうに…","3周目からはタイヤに引きずられています。","2杯目から箸が止まる。先輩の目を気にしながら必死に…","ノック100本目、魂はもう外野の外へ。","映像が始まった瞬間うとうと…気づけばエンドロール。"],
+  campL:"夏合宿：", camp:{ 신강:"最後まで立っている最後の一人。先輩たちも舌を巻きます。", 중화:"疲れてもペース配分で最後まで完走します。", 신약:"初日に倒れても翌日また出てくる根性派です。" },
   weaponL:"あなたの武器", weaponRef:n=>`（${n}系）`,
   weapon:{ P:[["球の終わりが生きて動くムービングボール","打者の手元で踊るように変化し、凡打を誘います。"],["150km台の剛速球","真っ向から力でねじ伏せるパワーピッチングです。"],["内角をえぐるカットボール","バットの根元を狙ってゴロを打たせます。"],["キレのある高速スライダー","決め球一つで空振りを奪います。"],["緩急とチェンジアップ","タイミングを外して打者を料理します。"]],
     H:[["柔らかいバットコントロール","どんな球も打ち返して空いたところへ運びます。"],["初球からフルスイング","迷いのない長打で流れをひっくり返します。"],["チャンスに強いクラッチ打撃","ランナーがいるほど集中力が上がります。"],["俊足と鋭い守備","あと一つの塁、あと一歩で流れを変えます。"],["狙い球打ち","相手バッテリーの配球を読み、狙った球を打ちます。"]] },
@@ -110,6 +128,15 @@ const SCOUT_JA = {
 };
 
 const SCOUT_EN = {
+  buddyT:"👬 Classmate who grows with you",
+  buddyWhy:{ hap:n=>`Your day stems unite — strangely comfortable from the first day.`, same:n=>`Same element, same way of thinking — you click without words.`, get:n=>`${n}'s energy supports yours — just having him around gives you strength.`, give:n=>`Your energy nourishes ${n} — you look out for him and grow together.`, other:n=>`Your best match among classmates — always beside you when it's tough.` },
+  buddyLine:{ eijun:"You drag tires together every night!", furuya:"You became friends running side by side in silence!", haruichi:"You two stay late for extra batting practice!", kanemaru:"Kanemaru tutors you before every exam!", toujou:"He's the first one you tell your worries to!" },
+  hTrain:"🏋️ Seido's hell training", trainGood:"💪 Your best drill", trainBad:"😵 The drill that breaks your soul",
+  trainWhyGood:e=>`because ${e} is your most abundant element`, trainWhyBad:e=>`because ${e} is your scarcest element`,
+  menu:["Late-night solo swings","Tire-drag running","Mandatory three bowls of rice","Coach Kataoka's fungo hell","Opponent video analysis"],
+  good:["Hundreds of swings alone every night and you never get bored.","Two tires? No problem — the more you drag, the more fun.","Three bowls is the baseline. Seconds, please.","Fielding the endless barrage actually feels refreshing.","Spotting opponents' habits on tape is the best part."],
+  bad:["Swinging half-asleep, the bat nearly flies away…","By lap three, the tire is dragging you.","Chopsticks stop at bowl two. Forcing it down under a senior's glare…","Fungo #100 — your soul has left the outfield.","You nod off the moment the tape starts… wake up to the credits."],
+  campL:"Summer camp:", camp:{ 신강:"The last one standing. Even the seniors are impressed.", 중화:"Tired, but you pace yourself and finish.", 신약:"You collapse on day one but show up again the next day — pure grit." },
   weaponL:"Your weapon", weaponRef:n=>`(${n} style)`,
   weapon:{ P:[["Moving ball with a living finish","Dances in front of the hitter and induces weak contact."],["150 km/h-class fastball","Power pitching that overpowers hitters head-on."],["Cutter that jams the inside","Aims at the bat handle to get grounders."],["Sharp high-speed slider","One put-away pitch steals the swing and miss."],["Change of pace and changeup","Steals the timing and cooks the hitter."]],
     H:[["Soft bat control","Hits any pitch back into the open gaps."],["Full swing from the first pitch","Fearless extra-base power that flips the mood."],["Clutch hitting","The more runners on, the sharper your focus."],["Speed and sharp defense","One more base, one more step to change the flow."],["Sit-on-a-pitch hitting","Read the battery's sequence and hit the pitch you wanted."]] },
