@@ -305,3 +305,13 @@ button.bar.pick[aria-pressed="true"]::after { color: var(--accent); }
   padding: 16px; margin-top: 6px; box-shadow: 4px 4px 0 var(--field);
 }
 .pair.good > .verdict { background: var(--paper); border: 1.5px solid var(--line); }
+
+/* 예시 결과 안내: 잘 보이게 */
+.sample-tag {
+  align-self: stretch; display: block; padding: 10px 14px; border-radius: 12px;
+  border: 1.5px solid var(--gold); background: color-mix(in srgb, var(--gold) 18%, var(--paper));
+  color: var(--ink); font-size: 14px; font-weight: 600; line-height: 1.5;
+}
+/* 점수 배지: 라이트·다크 모두 진한 남색 바탕 */
+.ball .pct { background: #16224a; color: #f0c75a; border-color: var(--bg); }
+.pair.good .ball .pct { color: #8be09a; }

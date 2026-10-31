@@ -300,7 +300,7 @@ const PACK_EN = {
       "Pair descriptions are based on in-story relationships where they exist; for pairs with little contact, they're read from the two day stems (union, clash, generating, controlling). Names follow the official romanization; descriptions summarize the original manga Ace of Diamond (Yuji Terajima). Unofficial fan-made, just for fun — not affiliated with the author, publisher or anime studio."
     ],
     contact:"Corrections:",
-    sample:(y,m,d,t)=>`Sample result · born ${y}-${m}-${d} ${t}`,
+    sample:(y,m,d,t)=>`👀 This is a sample result (born ${y}-${m}-${d} ${t}) · enter your birthday above to see yours!`,
     err:"Please enter a date between 1900 and 2100.",
     pil:{ hour:"Hour", day:"Day", month:"Month", year:"Year" }, dayOnly:"Day stem", self:"Day stem", unknownTime:"Time unknown", me:"Day stem",
     gods:[["Friend","Rob Wealth"],["Eating God","Hurting Officer"],["Indirect Wealth","Direct Wealth"],["Seven Killings","Direct Officer"],["Indirect Resource","Direct Resource"]],
