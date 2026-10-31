@@ -280,3 +280,13 @@ button.bar.pick[aria-pressed="true"]::after { color: var(--accent); }
 }
 #u-cxHint::before { content: "👆"; font-size: 18px; }
 @media (prefers-reduced-motion: reduce) { button.bar.pick { transition: none; } button.bar.pick:hover { transform: none; } }
+
+/* 찰떡 배터리 히어로 (닮은 선수 결과와 같은 형태) */
+.pairs { grid-template-columns: 1fr; }
+.pair.good { gap: 14px; padding: 20px; }
+.pair.good .match { gap: 20px; }
+.pair.good .ball, .pair.good .avatar { width: 112px; height: 112px; }
+.pair.good .avatar { font-size: 50px; }
+.pair.good .ball .pct { color: #8be09a; }
+.pair.good .match-text h3 { font-size: clamp(30px, 7.5vw, 44px); }
+.pair.good .kind { font-size: 20px; }

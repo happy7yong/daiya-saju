@@ -156,7 +156,26 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
       <p class="split">${esc(u.relLine(x.name, !!x.real, stemName(x.rds), stemName(ds), RR.k))}</p>
       <p class="verdict">${esc(verdict)}</p>`;
   };
-  $("pGood").innerHTML = pairHtml(best, true);
+  // 찰떡 배터리: 닮은 선수 결과와 같은 히어로 형태
+  const heroHtml = r => {
+    const x = C(r.c), ch = chemOf([c.id, x.id].sort().join("|")), RR = pk.rel[r.rel];
+    const story = ch ? ch.c : u.fallbackStory(RR.d);
+    const verdict = ch ? ch.g : RR.g;
+    return `<span class="kind">${u.good}</span>
+      <div class="match">
+        <div class="ball"><div class="avatar" style="background:${x.color}"><span>${x.emoji}</span></div><span class="pct">${u.pts(r.score)}</span></div>
+        <div class="match-text">
+          <span class="you-are">${esc(u.bestIs)}</span>
+          <h3>${esc(x.name)}</h3>
+          <span class="alias">${teamTag(x)}${esc(x.pos)}</span>
+          <p class="tagline">${esc(x.tag)}</p>
+        </div>
+      </div>
+      <p class="story">${esc(story)}</p>
+      <p class="split">${esc(u.relLine(x.name, !!x.real, stemName(x.rds), stemName(ds), RR.k))}</p>
+      <p class="verdict">${esc(verdict)}</p>`;
+  };
+  $("pGood").innerHTML = heroHtml(best);
   $("pBad").innerHTML = pairHtml(worst, false);
   $("chem").innerHTML = cs.map(r => { const x = C(r.c); return `<button type="button" class="bar pick" data-id="${x.id}"><span>${x.emoji} ${esc(x.name)}</span><div class="track"><div class="fill" style="width:${r.score}%;background:${r.score >= 60 ? "var(--field)" : r.score < 40 ? "var(--fire)" : "var(--earth)"}"></div></div><span class="n">${r.score}</span></button>`; }).join("");
   CX = { ds, a, p, me: c };

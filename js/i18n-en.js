@@ -324,7 +324,7 @@ const PACK_EN = {
     noneSame:stem=>`None of the 20 were born with a ${stem} day stem — a rare energy missing from the team.`,
     chip:(n,m,d)=>`${n} · ${m}/${d}`,
     otherSub:(p,team,stem,type)=>`${p}% alike · ${team} · ${stem} ${type}`,
-    good:"Perfect battery", bad:"Watch for crossed signs", pairSub:c=>`vs. you, the ${c} type`, pts:s=>`${s}`,
+    bestIs:"Your best battery partner is", good:"Perfect battery", bad:"Watch for crossed signs", pairSub:c=>`vs. you, the ${c} type`, pts:s=>`${s}`,
     relLine:(n,real,stem,my,k)=>`${n}'s ${real ? "birthday" : "personality"} day stem: ${stem}. With your ${my}: ${k}.`,
     fallbackStory:d=>`Not much contact in the story, but: ${d}`,
     dexHead:["Player","Birthday","Day pillar","Birthday stem","Strength","Personality type"],

@@ -70,7 +70,7 @@ const PACK_KO = {
     noneSame:stem=>`20명 중 ${stem} 일간으로 태어난 선수는 없어요. 팀에 없는 희귀한 기운이라는 뜻이에요.`,
     chip:(n,m,d)=>`${n} · ${m}/${d}`,
     otherSub:(p,team,stem,type)=>`닮음 ${p}% · ${team} · ${stem} ${type}`,
-    good:"찰떡 배터리", bad:"사인 미스 주의", pairSub:c=>`${c} 타입인 나와의 케미`, pts:s=>`${s}점`,
+    bestIs:"나와 가장 잘 맞는 배터리는", good:"찰떡 배터리", bad:"사인 미스 주의", pairSub:c=>`${c} 타입인 나와의 케미`, pts:s=>`${s}점`,
     relLine:(n,real,stem,my,k)=>`${n}의 ${real ? "생일" : "성격"} 일간은 ${stem}. 내 일간 ${my}${jo(my, "과", "와")}는 ${k} 관계예요.`,
     fallbackStory:d=>`작중 접점은 많지 않지만, ${d}`,
     dexHead:["선수","생일","일주","생일 일간","신강약","성격 타입"],

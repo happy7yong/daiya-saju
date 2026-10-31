@@ -324,7 +324,7 @@ const PACK_JA = {
     noneSame:stem=>`20人の中に${stem}日干で生まれた選手はいません。チームにない珍しい気ということです。`,
     chip:(n,m,d)=>`${n}・${m}/${d}`,
     otherSub:(p,team,stem,type)=>`似ている度${p}%・${team}・${stem} ${type}`,
-    good:"相性抜群バッテリー", bad:"サインミスに注意", pairSub:c=>`${c}タイプのあなたとのケミ`, pts:s=>`${s}点`,
+    bestIs:"あなたと一番相性がいいのは", good:"相性抜群バッテリー", bad:"サインミスに注意", pairSub:c=>`${c}タイプのあなたとのケミ`, pts:s=>`${s}点`,
     relLine:(n,real,stem,my,k)=>`${n}の${real ? "誕生日" : "性格"}の日干は${stem}。あなたの日干${my}とは${k}の関係です。`,
     fallbackStory:d=>`作中の接点は少ないけれど、${d}`,
     dexHead:["選手","誕生日","日柱","誕生日の日干","身強・身弱","性格タイプ"],
