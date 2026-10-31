@@ -52,7 +52,7 @@ function applyStatic() {
   const u = U();
   document.documentElement.lang = u.htmlLang;
   document.title = u.title;
-  ["eyebrow","h1a","h1b","lede","bd","bt","zi","ziNext","ziSame","nt","hint","go","youAre","tChar","tEp","hBirth","hMine","ohT","sgT","sameT","hOthers","hPairs","chemT","hDex","dexSum"].forEach(k => { const el = $("u-" + k); if (el) el.textContent = u[k]; });
+  ["hMatch","eyebrow","h1a","h1b","lede","bd","bt","zi","ziNext","ziSame","nt","hint","go","youAre","tChar","tEp","hBirth","hMine","ohT","sgT","sameT","hOthers","hPairs","chemT","hDex","dexSum"].forEach(k => { const el = $("u-" + k); if (el) el.textContent = u[k]; });
   $("u-pairNote").innerHTML = u.pairNote;
   $("u-cxHint").textContent = u.cx.hint;
   $("u-notes").innerHTML = u.notes.map(n => `<p>${esc(n)}</p>`).join("")

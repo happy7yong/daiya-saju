@@ -290,7 +290,7 @@ const PACK_EN = {
     bd:"Date of birth (solar)", bt:"Time of birth", zi:"Rat hour (23:30~)", ziNext:"Use next day's pillar", ziSame:"Use same day's pillar",
     nt:"I don't know my birth time", hint:"Based on Korea Standard Time (UTC+9); solar terms are computed from the sun's ecliptic longitude. If you were born outside Korea, enter the local time converted to KST.",
     go:"Play ball!", youAre:"The player most like you is", tChar:"What he's like", tEp:"Key moments",
-    hBirth:"His real Saju, from his birthday", hMine:"Your Four Pillars", ohT:"Five Elements (count of stems & branches)", sgT:"Ten Gods balance (month branch weighted, day stem excluded)",
+    hMatch:"Your look-alike player", hBirth:"His real Saju, from his birthday", hMine:"Your Four Pillars", ohT:"Five Elements (count of stems & branches)", sgT:"Ten Gods balance (month branch weighted, day stem excluded)",
     sameT:"Players born with the same day stem as you (official birthdays)", hOthers:"Next closest players", hPairs:"Your best and worst battery",
     pairNote:"Compatibility compares your chart with each player's <b>birthday Saju</b>.", chemT:"Compatibility with other players",
     hDex:"Players' Birthday Saju Index", dexSum:"See all 20 official birthdays and day pillars",
