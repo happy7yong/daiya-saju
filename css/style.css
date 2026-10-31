@@ -1,3 +1,6 @@
+/* hidden 속성은 항상 숨김 (컴포넌트 display 규칙보다 우선) */
+[hidden] { display: none !important; }
+
 :root {
   --bg: #f4f5f8;
   --paper: #ffffff;
@@ -230,7 +233,7 @@ details.intro p:last-child { margin-bottom: 0; }
 
 /* 궁합 풀이 */
 .cpx { background: var(--paper); border: 2px solid var(--ink); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px; box-shadow: 4px 4px 0 var(--field); }
-.cx-head { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; }
+.cx-head { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
 .cx-head .mini { width: 52px; height: 52px; font-size: 26px; }
 .cx-head h3 { font-family: var(--font-head); font-size: 20px; line-height: 1.2; }
 .cx-head .sub { font-size: 13px; color: var(--ink-soft); }
@@ -294,3 +297,11 @@ button.bar.pick[aria-pressed="true"]::after { color: var(--accent); }
 /* 찰떡 배터리 카드 안의 궁합 풀이 */
 .cx-in { border-top: 2px dashed var(--line); padding-top: 16px; margin-top: 4px; display: flex; flex-direction: column; gap: 14px; }
 .cx-in .cx-head .mini { background: var(--paper); }
+
+/* 찰떡 배터리: 소개는 박스 없이(닮은 선수 결과처럼), 궁합 풀이부터 박스 */
+.pair.good { background: transparent; border: 0; box-shadow: none; padding: 0; }
+.pair.good .cx-in {
+  background: var(--paper); border: 2px solid var(--ink); border-radius: 18px;
+  padding: 16px; margin-top: 6px; box-shadow: 4px 4px 0 var(--field);
+}
+.pair.good > .verdict { background: var(--paper); border: 1.5px solid var(--line); }

@@ -232,7 +232,7 @@ function cxHtml(rc) {
     ? `<div class="pillars-scroll"><div class="pillars">${pillarHtml(t.real, t.rds, [["hour", null], ["day", t.real.day], ["month", t.real.month], ["year", t.real.year]], true, true)}</div></div>`
     : `<p class="split">${esc(x.noReal(t.name))}</p>`;
   return `
-    <div class="cx-head">${mini(t)}<div><h3>${esc(x.h)}</h3><div class="sub">${esc(x.title("", t.name))}</div></div><div class="cx-score"><b>${r.score}</b><span>${esc(x.total)}</span></div></div>
+    <div class="cx-head"><div><h3>${esc(x.h)}</h3><div class="sub">${esc(x.title("", t.name))}</div></div><div class="cx-score"><b>${r.score}</b><span>${esc(x.total)}</span></div></div>
     <div class="cx-charts">
       <div><h4>${esc(x.mine)}</h4><div class="pillars-scroll"><div class="pillars">${pillarHtml(p, ds, [["hour", p.hour], ["day", p.day], ["month", p.month], ["year", p.year]], false, true)}</div></div></div>
       <div><h4>${esc(x.theirs(t.name))}</h4>${theirs}</div>
