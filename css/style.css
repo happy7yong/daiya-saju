@@ -332,3 +332,4 @@ button.bar.pick[aria-pressed="true"]::after { color: var(--accent); }
 .friend-vs p { margin: 4px 0 0; font-size: 14px; }
 .friend-others { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .friend-others > span:first-child { width: 100%; font-size: 12px; color: var(--ink-soft); }
+.friend-top .chip.first { border-color: var(--field); background: color-mix(in srgb, var(--field) 12%, var(--paper)); font-weight: 600; }

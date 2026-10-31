@@ -150,6 +150,7 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   CX = { ds, a, p, me: c };
   BEST_ID = cs[0].c.id;
   LAST_RESULT.best = cs[0].c.id; LAST_RESULT.bestScore = cs[0].score;
+  LAST_RESULT.topCompat = cs.slice(0, 3).map(r => [r.c.id, r.score]);
   renderFriend(ds, a);
   const best = cs[0], worst = cs[cs.length - 1];
   const pairHtml = (r, good) => {
@@ -310,14 +311,23 @@ function parseFriend() {
       const oc = CHARS.find(c => c.id === parts[i]), op = +parts[i + 1];
       if (oc && op >= 0 && op <= 100) others.push([oc, op]);
     }
-    return { ch, ds: d, s, pct: pc, best: bc, bestScore: sc, others };
+    // 궁합 TOP3: &c=<id>.<점수> ×3 (없으면 찰떡 배터리 1명만)
+    const top = [];
+    const cp = (new URLSearchParams(location.search).get("c") || "").split(".");
+    for (let i = 0; i + 1 < cp.length && top.length < 3; i += 2) {
+      const tc = CHARS.find(c => c.id === cp[i]), ts = +cp[i + 1];
+      if (tc && ts >= 0 && ts <= 100) top.push([tc, ts]);
+    }
+    if (!top.length) top.push([bc, sc]);
+    return { ch, ds: d, s, pct: pc, best: bc, bestScore: sc, others, top };
   } catch (e) { return null; }
 }
 const FRIEND = parseFriend();
 function resultUrl() {
   const R = LAST_RESULT;
   const base = (window.DAIYA_CONFIG && window.DAIYA_CONFIG.siteUrl) || (location.origin + location.pathname);
-  return base + "?r=" + [R.id, R.ds, R.s, R.pct, R.best, R.bestScore, ...R.others.flat()].join(".") + "#" + LANG;
+  return base + "?r=" + [R.id, R.ds, R.s, R.pct, R.best, R.bestScore, ...R.others.flat()].join(".")
+    + "&c=" + R.topCompat.flat().join(".") + "#" + LANG;
 }
 function renderFriend(myDs, myA) {
   const box = $("friend");
@@ -335,7 +345,7 @@ function renderFriend(myDs, myA) {
   box.innerHTML = `<span class="friend-label">${esc(u.friendT)}</span>
     <div class="friend-main">${mini(x)}<div><div class="nm">${esc(x.name)}</div>
       <div class="sub">${esc(stemName(f.ds))} · ${esc(strength)} · ${esc(u.friendPct(f.pct))}</div></div></div>
-    <div class="friend-best">${esc(u.good)} ${b.emoji} <b>${esc(b.name)}</b> ${u.pts(f.bestScore)}</div>
+    <div class="friend-others friend-top"><span>${esc(u.friendTop)}</span>${f.top.map(([tc, ts], i) => { const o = C(tc); return `<span class="chip${i === 0 ? " first" : ""}">${mini(o)}${esc(o.name)} · ${u.pts(ts)}</span>`; }).join("")}</div>
     ${f.others.length ? `<div class="friend-others"><span>${esc(u.hOthers)}</span>${f.others.map(([oc, op]) => { const o = C(oc); return `<span class="chip">${mini(o)}${esc(o.name)} · ${op}%</span>`; }).join("")}</div>` : ""}
     ${mine || `<button type="button" class="go friend-go" id="friendGo">${esc(u.tryMine)}</button>`}`;
   const go = $("friendGo");

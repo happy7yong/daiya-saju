@@ -256,7 +256,7 @@ const PACK_JA = {
   },
   ui: {
     htmlLang:"ja",
-    shareX:"X（Twitter）で結果をシェア", copyLink:"リンクをコピー", shareMine:"🔗 結果リンクをコピー", friendT:"友だちから届いた結果", friendPct:p=>`似ている度${p}%`, tryMine:"自分もやってみる ↓", friendCompat:"友だちとあなたの相性", copied:"コピーしました！",
+    shareX:"X（Twitter）で結果をシェア", copyLink:"リンクをコピー", shareMine:"🔗 結果リンクをコピー", friendTop:"相性のいい選手 TOP 3", friendT:"友だちから届いた結果", friendPct:p=>`似ている度${p}%`, tryMine:"自分もやってみる ↓", friendCompat:"友だちとあなたの相性", copied:"コピーしました！",
     shareText:(n,stem,type)=>`四柱推命で見つけた私のダイヤのAは${n}！（${stem} ${type}）あなたもやってみて⚾ #ダイヤのA四柱推命 #ダイヤのA`,
     cx:{
       h:"四柱推命の相性診断", hint:"選手をタップすると、その選手との相性診断が見られます！",
