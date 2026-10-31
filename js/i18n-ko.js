@@ -49,7 +49,7 @@ const PACK_KO = {
     contact:"틀린 정보 문의:",
     sample:(y,m,d,t)=>`예시 결과 · ${y}년 ${m}월 ${d}일 ${t}생`,
     err:"생년월일을 1900년~2100년 사이 날짜로 입력해 주세요.",
-    pil:{ hour:"시주", day:"일주", month:"월주", year:"년주" }, dayOnly:"일간", self:"본인 (일간)", unknownTime:"시각 미상", me:"나 (일간)",
+    pil:{ hour:"시주", day:"일주", month:"월주", year:"년주" }, dayOnly:"일간", self:"일간", unknownTime:"시각 미상", me:"일간",
     gods:GOD_NAMES,
     el:EL_K,
     stemsR:STEMS_K, branchesR:BRANCHES_K,

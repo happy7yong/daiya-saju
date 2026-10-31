@@ -302,7 +302,7 @@ const PACK_EN = {
     contact:"Corrections:",
     sample:(y,m,d,t)=>`Sample result · born ${y}-${m}-${d} ${t}`,
     err:"Please enter a date between 1900 and 2100.",
-    pil:{ hour:"Hour", day:"Day", month:"Month", year:"Year" }, dayOnly:"Day stem", self:"Self (day stem)", unknownTime:"Time unknown", me:"Me (day stem)",
+    pil:{ hour:"Hour", day:"Day", month:"Month", year:"Year" }, dayOnly:"Day stem", self:"Day stem", unknownTime:"Time unknown", me:"Day stem",
     gods:[["Friend","Rob Wealth"],["Eating God","Hurting Officer"],["Indirect Wealth","Direct Wealth"],["Seven Killings","Direct Officer"],["Indirect Resource","Direct Resource"]],
     el:["Wood","Fire","Earth","Metal","Water"],
     stemsR:["Jia","Yi","Bing","Ding","Wu","Ji","Geng","Xin","Ren","Gui"],
