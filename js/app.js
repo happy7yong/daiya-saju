@@ -30,13 +30,13 @@ const mini = c => `<span class="mini" style="background:${c.color}">${c.emoji}</
 function godName(ds, stem) { const g = godOf(ds, stem); return U().gods[g.group][(ds % 2) === (stem % 2) ? 0 : 1]; }
 
 const lab2 = (r, e) => LANG === "ko" ? r + e : LANG === "ja" ? e : r + " " + e;
-function pillarHtml(p, ds, cols, other) {
+function pillarHtml(p, ds, cols, other, plain) {
   const u = U();
   return cols.map(([key, pil]) => {
     const lab = u.pil[key];
     if (!pil) return `<div class="pillar"><span class="lab">${lab}</span><div class="cell empty">${u.unknownTime}</div><div class="cell empty">${u.unknownTime}</div></div>`;
     const se = pil[0] >> 1, be = BR_EL[pil[1]];
-    const sGod = key === "day" ? (other ? u.self : u.me) : godName(ds, pil[0]);
+    const sGod = key === "day" ? (plain ? u.dayOnly : other ? u.self : u.me) : godName(ds, pil[0]);
     const bGod = godName(ds, BR_MAIN[pil[1]]);
     return `<div class="pillar"><span class="lab">${lab}</span>
       <div class="cell${key === "day" ? " me" : ""}"><span class="han e-${EL[se]}">${STEMS[pil[0]]}</span><span class="kor">${lab2(u.stemsR[pil[0]], u.el[se])}</span><span class="god">${sGod}</span></div>
@@ -229,12 +229,12 @@ function cxHtml(rc) {
   const gn1 = u.gods[g1.group][(ds % 2) === (t.rds % 2) ? 0 : 1], gn2 = u.gods[g2.group][(ds % 2) === (t.rds % 2) ? 0 : 1];
   items.push([x.kGod, null, x.godLine(esc(t.name), gn1, esc(x.godDesc[GROUPS[g1.group]]), gn2, esc(x.godDesc[GROUPS[g2.group]]))]);
   const theirs = t.real
-    ? `<div class="pillars-scroll"><div class="pillars">${pillarHtml(t.real, t.rds, [["hour", null], ["day", t.real.day], ["month", t.real.month], ["year", t.real.year]], true)}</div></div>`
+    ? `<div class="pillars-scroll"><div class="pillars">${pillarHtml(t.real, t.rds, [["hour", null], ["day", t.real.day], ["month", t.real.month], ["year", t.real.year]], true, true)}</div></div>`
     : `<p class="split">${esc(x.noReal(t.name))}</p>`;
   return `
     <div class="cx-head">${mini(t)}<div><h3>${esc(x.h)}</h3><div class="sub">${esc(x.title("", t.name))}</div></div><div class="cx-score"><b>${r.score}</b><span>${esc(x.total)}</span></div></div>
     <div class="cx-charts">
-      <div><h4>${esc(x.mine)}</h4><div class="pillars-scroll"><div class="pillars">${pillarHtml(p, ds, [["hour", p.hour], ["day", p.day], ["month", p.month], ["year", p.year]])}</div></div></div>
+      <div><h4>${esc(x.mine)}</h4><div class="pillars-scroll"><div class="pillars">${pillarHtml(p, ds, [["hour", p.hour], ["day", p.day], ["month", p.month], ["year", p.year]], false, true)}</div></div></div>
       <div><h4>${esc(x.theirs(t.name))}</h4>${theirs}</div>
     </div>
     <ul class="cx-list"><li><span class="k">${esc(x.base)}</span><span class="pts">50</span><p></p></li>${items.map(([k, v, txt]) => `<li><span class="k">${esc(k)}</span>${v == null ? "<span class=\"pts\"></span>" : pts(v)}<p>${txt}</p></li>`).join("")}</ul>
