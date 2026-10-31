@@ -1,6 +1,9 @@
 
 // ===== 작중 관계가 있는 조합 (c: 관계, g: 잘 맞을 때, b: 삐걱일 때) =====
 const CHEM_NEW = {
+  "amahisa|eijun": { c:"2부에서 이치다이산과 세이도의 에이스로 맞붙은 동갑 투수 라이벌이에요.", g:"서로의 공을 보며 더 날카로워지는, 같은 학년 에이스 라이벌이에요.", b:"능글맞은 아마히사와 직진형 사와무라, 페이스가 달라 말려들기 쉬워요." },
+  "miyuki|watanabe": { c:"같은 학년 동료예요. 2부에서 와타나베가 정리한 상대 분석을 미유키가 리드에 활용해요.", g:"판을 읽는 포수와 데이터를 모으는 분석가, 서로의 눈이 되어 주는 사이예요.", b:"미유키의 혼자 짊어지는 버릇에 와타나베가 속을 끓일 수 있어요." },
+  "miyauchi|tetsu": { c:"함께 마지막 여름을 보낸 3학년 동기예요. 주장 테츠야 곁에서 미야우치는 묵묵히 팀을 받쳤어요.", g:"말보다 행동으로 통하는, 묵직한 3학년 동기예요.", b:"둘 다 과묵해서 속마음이 전해지는 데 시간이 걸려요." },
   "eijun|okumura": { c:"2부에서 새로 배터리를 이룬 사이예요. 사와무라의 까다로운 공을 1학년 포수 오쿠무라가 받아 내며 함께 맞춰 가요.", g:"뜨거운 투수와 냉정한 포수, 서로를 다잡아 주는 새 배터리예요.", b:"텐션 높은 사와무라와 쿨한 오쿠무라, 처음엔 온도 차 때문에 자주 부딪혀요." },
   "miyuki|okumura": { c:"오쿠무라는 미유키의 리드를 보며 배우려는 1학년 포수예요. 미유키는 무심한 듯 후배 포수를 키워요.", g:"천재 포수와 그 리드를 흡수하는 후배, 세이도 안방이 이어지는 사이예요.", b:"미유키의 능글맞은 태도가 진지한 오쿠무라에겐 답답하게 느껴질 수 있어요." },
   "okumura|yui": { c:"같은 1학년 포수로 마스크를 두고 경쟁하는 라이벌이에요.", g:"서로가 있어서 더 빨리 크는, 동갑 포수 라이벌이에요.", b:"자리는 하나라서 한쪽이 기회를 잡으면 다른 쪽 속이 타요." },
@@ -112,7 +115,7 @@ function compatOne(ds, a, c) {
 // 그룹 안에서는 십성 구성(±30) + 신강약(±12) + 오행 분포(0~10) + 일지·월지 일치(최대 10)로 비교
 // BALANCE는 같은 일간 그룹 안에서 결과가 한 선수에게 쏠리지 않게 하는 작은 보정값 (무작위 생년월일로 보정)
 // 출생 연도를 모르는 선수(카타오카 감독)는 매칭에서 제외
-const BALANCE = { tetsu:-2.8, kanemaru:0, haruichi:-4.7, eijun:-1.3, yui:-13.4, toujou:-4.6, chris:3.9, sanada:1.5, masuko:4.6, kuramochi:3.5, kawakami:-9.2, isashiki:3.9, raichi:3.5, mei:5.9, ryosuke:1.6, furuya:6.4, carlos:4.3, miyuki:-6, okumura:2.8 };
+const BALANCE = { tetsu:-2.8, kanemaru:0, haruichi:-4.7, eijun:-1.3, yui:-13.4, toujou:-4.5, chris:4.6, sanada:3, masuko:4.5, kuramochi:3.5, kawakami:-11, isashiki:3.4, raichi:3.5, mei:5.9, ryosuke:1.6, furuya:6.4, carlos:4.3, miyuki:-6, okumura:2.8, miyauchi:-4.5, watanabe:4.5, shirasu:3, amahisa:-3 };
 function scoreReal(ds, a) {
   const norm = v => { const s = Math.hypot(...v) || 1; return v.map(x => x / s); };
   const myEl = norm(a.el), myP = a._p;

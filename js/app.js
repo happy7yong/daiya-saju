@@ -55,8 +55,7 @@ function applyStatic() {
   ["hMatch","eyebrow","h1a","h1b","lede","bd","bt","zi","ziNext","ziSame","nt","hint","go","youAre","tChar","tEp","hBirth","hMine","ohT","sgT","sameT","hOthers","hPairs","chemT","hDex","dexSum"].forEach(k => { const el = $("u-" + k); if (el) el.textContent = u[k]; });
   $("u-pairNote").innerHTML = u.pairNote;
   $("u-cxHint").textContent = u.cx.hint;
-  $("u-notes").innerHTML = u.notes.map(n => `<p>${esc(n)}</p>`).join("")
-    + `<p>${esc(u.contact)} <a href="https://x.com/Ace_torb" target="_blank" rel="noopener">X @Ace_torb</a></p>`;
+  $("u-notes").innerHTML = u.notes.map(n => `<p>${esc(n)}</p>`).join("");
   $("intro").hidden = !u.intro;
   if (u.intro) { $("u-introT").textContent = u.introT; $("u-intro").innerHTML = u.intro.map(t => `<p>${t}</p>`).join(""); }
   document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === LANG));

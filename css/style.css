@@ -192,7 +192,7 @@ hr.seam { border: 0; height: 10px; margin: 0;
 
 /* 20명 버전 추가 스타일 */
 .team { display: inline-block; font-size: 11px; padding: 0 7px; border-radius: 6px; margin-right: 4px; color: #fff; vertical-align: 1px; }
-.team.seido { background: #1d2b6b; } .team.inashiro { background: #4b5563; } .team.yakushi { background: #b45309; }
+.team.seido { background: #1d2b6b; } .team.inashiro { background: #4b5563; } .team.yakushi { background: #b45309; } .team.ichidai { background: #6d28d9; }
 .birth { background: var(--paper); border: 2px solid var(--ink); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: 4px 4px 0 var(--gold); }
 .birth .bhead { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
 .birth .bhead b { font-family: var(--font-head); font-weight: normal; font-size: 20px; }
