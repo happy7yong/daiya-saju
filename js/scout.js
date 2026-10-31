@@ -89,14 +89,9 @@ function scout(p) {
   const lab = a.strengthLabel;
   const num = POS[pos].num[lab === "신강" ? 0 : lab === "중화" ? 1 : 2];
   // 학교 스카우트 관심도
-  const raw = {
-    seido: 0.25 + r[3] + r[4],
-    inashiro: r[0] * 1.3 + (a.support >= 0.55 ? 0.15 : 0),
-    yakushi: r[1] + r[2] * 0.5,
-    ichidai: r[2] * 0.9 + r[1] * 0.4 + ((domEl === 3 || domEl === 4) ? 0.1 : 0)
-  };
-  const sum = SCHOOLS.reduce((s, k) => s + raw[k], 0);
-  const schools = SCHOOLS.map(k => ({ k, pct: Math.round(raw[k] / sum * 100) })).sort((x, y) => y.pct - x.pct);
+  // 학교 = 십성 비중을 그대로 나눠 가짐 (세이도: 관성+인성, 이나시로: 비겁, 야쿠시: 식상, 이치다이산: 재성 → 합 100%)
+  const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1], ichidai: r[2] };
+  const schools = SCHOOLS.map(k => ({ k, v: sp[k], pct: Math.round(sp[k] * 100) })).sort((x, y) => y.v - x.v);
   const school = schools[0].k;
   // 궁합 (공용 compatOne)
   const real = CHARS.filter(c => c.real);
@@ -122,7 +117,6 @@ function scout(p) {
   const pick = ids => { const l = ids.filter(id => !taken.includes(id)); return (l.length ? l : ids).map(cs).sort((x, y) => y.score - x.score)[0]; };
   */ const room = null;
   const weapon = { kind: pos === "P" ? "P" : "H", el: domEl, ref: byId(WEAPON_REF[pos === "P" ? "P" : "H"][domEl]) };
-  const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1] + r[2], ichidai: r[2] + r[1] };
   const why = s => S().schoolReason[s](Math.round(sp[s] * 100), s === "inashiro" ? a.support >= 0.55 : (domEl === 3 || domEl === 4));
   return { ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
 }
@@ -195,7 +189,7 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
     </ul>
     <div class="sc-share"><button type="button" class="go sc-copy" id="copyLink">${esc(s.copy)}</button><span class="sc-note" id="shareNote"></span></div>`;
   $("scSchools").innerHTML = R.schools.map((x, i) => `<div class="bar${i === 0 ? " top" : ""}"><span>${teamTag(x.k)}</span><div class="track"><div class="fill" style="width:${x.pct}%"></div></div><span class="n">${x.pct}%</span></div>
-    <p class="sc-sw"><b>${esc(s.schoolWhy[x.k])}</b> · ${esc(R.why(x.k))}</p>`).join("");
+    <p class="sc-sw"><b>${esc(s.schoolWhy[x.k])}</b> · ${esc(s.schoolGrp[x.k])} ${x.pct}%</p>`).join("");
   const mn = C(R.mentor.c).name, rn = C(R.rival.c).name, pn = C(R.partner.c).name;
   const mWhy = R.mentor.rel === "get" ? s.mentorWhy.get(mn, u.el[R.mentor.c.rds >> 1]) : s.mentorWhy.other(mn);
   const rWhy = (s.rivalWhy[R.rival.rel] || s.rivalWhy.other)(rn);

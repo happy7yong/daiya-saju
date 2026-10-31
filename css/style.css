@@ -343,3 +343,11 @@ button.bar.pick[aria-pressed="true"]::after { color: var(--accent); }
 .friend-others { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .friend-others > span:first-child { width: 100%; font-size: 12px; color: var(--ink-soft); }
 .friend-top .chip.first { border-color: var(--field); background: color-mix(in srgb, var(--field) 12%, var(--paper)); font-weight: 600; }
+
+/* 입학 시뮬레이션 바로가기 */
+.scout-cta { display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: #fff; background: #16224a; border: 2px solid #16224a; border-radius: 18px; padding: 16px 18px; box-shadow: 4px 4px 0 #c8102e; }
+.scout-cta b { font-family: var(--font-head); font-size: 22px; line-height: 1.25; font-weight: normal; }
+.scout-cta-k { align-self: flex-start; font-size: 11px; font-weight: 700; background: #f0c75a; color: #16224a; border-radius: 999px; padding: 1px 8px; }
+.scout-cta-s { font-size: 13px; color: #c9d0e3; }
+.scout-cta:hover b { text-decoration: underline; }
+@media (prefers-color-scheme: dark) { .scout-cta { border-color: #f0c75a; } }

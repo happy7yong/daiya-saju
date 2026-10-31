@@ -371,6 +371,7 @@ const PACK_EN = {
     hMatch:"Your look-alike player", hBirth:"His real Saju, from his birthday", hMine:"Your Four Pillars", ohT:"Five Elements (count of stems & branches)", sgT:"Ten Gods balance (month branch weighted, day stem excluded)",
     sameT:"Players born with the same day stem as you (official birthdays)", hOthers:"Next closest players", hPairs:"Your best and worst battery",
     pairNote:"Compatibility compares your chart with each player's <b>birthday Saju</b>. On top of the day stems' union or clash, it weighs day-branch harmony (six unions, three unions, Wonjin, clashes), whether they fill your missing elements and Yongshin, seasonal balance, zodiac and hidden unions — so even people with the same day stem get different top matches.", chemT:"Compatibility with other players",
+    scoutK:"NEW", scoutT:"🏫 If you enrolled in the Ace of Diamond world?", scoutS:"Your school, position, number, senior, rival and ace showdown by Saju →",
     hDex:"Players' Birthday Saju Index", dexSum:"See all 24 official birthdays and day pillars",
     notes:[
       "Your look-alike is picked by comparing your chart with each player's official-birthday chart: same day stem +45, same element +28, plus Ten Gods balance (±30), chart strength (±12), element spread (0–10) and matching day/month branches (up to 10). Because the players' day stems cluster in Ding Fire and Ji Earth, a small per-player balance is added so results don't pile up. Manager Kataoka's birth year is unknown, so he only appears in the compatibility list.",

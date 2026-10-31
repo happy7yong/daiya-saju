@@ -78,8 +78,9 @@ function applyStatic() {
   const u = U();
   document.documentElement.lang = u.htmlLang;
   document.title = u.title;
-  ["hMatch","eyebrow","h1a","h1b","lede","bd","bt","zi","ziNext","ziSame","nt","hint","go","youAre","tChar","tEp","hBirth","hMine","ohT","sgT","sameT","hOthers","hPairs","chemT","hDex","dexSum"].forEach(k => { const el = $("u-" + k); if (el) el.textContent = u[k]; });
+  ["hMatch","eyebrow","h1a","h1b","lede","bd","bt","zi","ziNext","ziSame","nt","hint","go","youAre","tChar","tEp","hBirth","hMine","ohT","sgT","sameT","hOthers","hPairs","chemT","hDex","dexSum","scoutK","scoutT","scoutS"].forEach(k => { const el = $("u-" + k); if (el) el.textContent = u[k]; });
   $("u-pairNote").innerHTML = u.pairNote;
+  $("scoutCta").href = "/scout#" + LANG;
   $("u-cxHint").textContent = u.cx.hint;
   $("u-notes").innerHTML = u.notes.map(n => `<p>${esc(n)}</p>`).join("");
   $("intro").hidden = !u.intro;
@@ -324,6 +325,7 @@ function shareUrl() {
 }
 
 // ===== 탐색 행동 추적 =====
+$("scoutCta").addEventListener("click", () => track("scout_cta_click", { lang: LANG }));
 document.querySelector("details.dex").addEventListener("toggle", e => { if (e.target.open) track("dex_open", { lang: LANG }); });
 $("u-introT").addEventListener("click", () => track("intro_toggle", { open: !$("intro").open, lang: LANG }));
 if ("IntersectionObserver" in window) {
