@@ -16,6 +16,7 @@ const PACK_KO = {
     sharedGroup:(g,d,m,h)=>`둘 다 ${g}이 강한 사주예요(나 ${m}%, 선수 ${h}%). ${g}은 ${d}${jo(d,"이에요","예요")}.`,
     sameStrength:l=>`둘 다 ${l} 사주라 힘을 쓰는 방식이 닮았어요.`,
     splitR:(s,names,lab,p)=>`${s} 일간으로 태어난 선수: ${names}. 내 사주는 <b>${lab}</b>(나를 돕는 기운 ${p}%).`,
+    rare:"팀에 없는 희귀한 기운",
     splitSib:(s,e,lab,p)=>`${s} 일간으로 태어난 선수는 없어서, 같은 ${e} 오행으로 태어난 선수 중에서 골랐어요. 내 사주는 <b>${lab}</b>(나를 돕는 기운 ${p}%).`,
     splitNone:(s,lab,p)=>`${s} 일간으로 태어난 선수는 없어서, 사주 구성이 가장 비슷한 선수를 골랐어요. 내 사주는 <b>${lab}</b>(나를 돕는 기운 ${p}%).`,
     shareX:"X(트위터)에 결과 공유", copyLink:"링크 복사", shareMine:"🔗 내 결과 링크 복사", friendTop:"궁합 좋은 선수 TOP 3", friendT:"친구가 보낸 결과", friendPct:p=>`닮음 ${p}%`, tryMine:"나도 해 보기 ↓", friendCompat:"친구와 나의 궁합", copied:"복사했어요!",

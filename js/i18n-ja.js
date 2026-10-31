@@ -310,6 +310,7 @@ const PACK_JA = {
     sharedGroup:(g,d,m,h)=>`二人とも${g}が強い命式です（あなた${m}%、選手${h}%）。${g}は「${d}」を表します。`,
     sameStrength:l=>`二人とも${l}の命式で、力の出し方が似ています。`,
     splitR:(s,names,lab,p)=>`${s}日干で生まれた選手：${names}。あなたの命式は<b>${lab}</b>（自分を助ける気${p}%）です。`,
+    rare:"チームにない珍しい気",
     splitSib:(s,e,lab,p)=>`${s}日干で生まれた選手はいないので、同じ${e}の五行で生まれた選手から選びました。あなたの命式は<b>${lab}</b>（自分を助ける気${p}%）です。`,
     splitNone:(s,lab,p)=>`${s}日干で生まれた選手はいないので、命式の構成がいちばん似ている選手を選びました。あなたの命式は<b>${lab}</b>（自分を助ける気${p}%）です。`,
     shareX:"X（Twitter）で結果をシェア", copyLink:"リンクをコピー", shareMine:"🔗 結果リンクをコピー", friendTop:"相性のいい選手 TOP 3", friendT:"友だちから届いた結果", friendPct:p=>`似ている度${p}%`, tryMine:"自分もやってみる ↓", friendCompat:"友だちとあなたの相性", copied:"コピーしました！",

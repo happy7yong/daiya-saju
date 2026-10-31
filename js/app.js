@@ -96,8 +96,8 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   const sameStem = CHARS.filter(x => x.real && x.rds === ds).map(C);
   $("split").innerHTML = sameStem.length
     ? u.splitR(esc(stemName(ds)), sameStem.map(x => `<b>${esc(x.name)}</b>`).join(", "), strLab(a.strengthLabel), Math.round(a.support * 100))
-    : top.tier === 1 ? u.splitSib(esc(stemName(ds)), u.el[ds >> 1], strLab(a.strengthLabel), Math.round(a.support * 100))
-    : u.splitNone(esc(stemName(ds)), strLab(a.strengthLabel), Math.round(a.support * 100));
+    : `<span class="rare">✨ ${esc(u.rare)}</span>` + (top.tier === 1 ? u.splitSib(esc(stemName(ds)), u.el[ds >> 1], strLab(a.strengthLabel), Math.round(a.support * 100))
+    : u.splitNone(esc(stemName(ds)), strLab(a.strengthLabel), Math.round(a.support * 100)));
 
   // 근거: 일간 → 가장 닮은 십성 → 신강약 (모두 선수의 실제 생일 사주와 비교)
   const rs = [];

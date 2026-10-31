@@ -217,6 +217,7 @@ table.dex-t { width: 100%; border-collapse: collapse; font-size: 13px; min-width
 .dex-t tr.hit td { background: var(--accent-soft); }
 .tagS { font-size: 11px; padding: 0 6px; border-radius: 6px; border: 1px solid currentColor; }
 .split { font-size: 13px; color: var(--ink-soft); margin: 0; }
+.rare { display: inline-block; margin: 0 6px 4px 0; padding: 2px 10px; border-radius: 999px; background: #fde68a; color: #78350f; font-size: 12px; font-weight: 700; }
 .split b { color: var(--ink); font-weight: normal; font-family: var(--font-head); }
 
 /* 언어 선택 & 사주 소개 */

@@ -310,6 +310,7 @@ const PACK_EN = {
     sharedGroup:(g,d,m,h)=>`You both have strong ${g} (you ${m}%, him ${h}%) — ${d}.`,
     sameStrength:l=>`Both charts are ${l}, so you use your strength in a similar way.`,
     splitR:(s,names,lab,p)=>`Players born with a ${s} day stem: ${names}. Your chart is <b>${lab}</b> (supporting energy ${p}%).`,
+    rare:"A rare energy missing from the team",
     splitSib:(s,e,lab,p)=>`No player was born with a ${s} day stem, so we picked from players born under the same ${e} element. Your chart is <b>${lab}</b> (supporting energy ${p}%).`,
     splitNone:(s,lab,p)=>`No player was born with a ${s} day stem, so we picked the one whose chart is most alike. Your chart is <b>${lab}</b> (supporting energy ${p}%).`,
     shareX:"Share on X (Twitter)", copyLink:"Copy link", shareMine:"🔗 Copy my result link", friendTop:"Best chemistry TOP 3", friendT:"Your friend's result", friendPct:p=>`${p}% alike`, tryMine:"Try it yourself ↓", friendCompat:"You and your friend", copied:"Copied!",
