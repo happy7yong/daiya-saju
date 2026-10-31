@@ -257,5 +257,4 @@ button.bar.pick[aria-pressed="true"] { background: var(--accent-soft); }
 /* 공유 버튼 */
 .share { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .share button { font: inherit; font-size: 13px; padding: 6px 14px; border-radius: 999px; cursor: pointer; border: 1.5px solid var(--ink); }
-.share-x { background: var(--ink); color: var(--bg); }
 .share-copy { background: var(--paper); color: var(--ink); }

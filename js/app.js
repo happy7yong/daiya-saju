@@ -83,7 +83,6 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   $("mAlias").innerHTML = teamTag(c) + esc(c.pos);
   $("mTag").textContent = c.tag;
   LAST_RESULT = { id: c.id, name: c.name, stem: stemName(c.stem), type: c.s > 0 ? u.strongType : u.weakType };
-  $("shareX").textContent = u.shareX;
   $("copyLink").textContent = u.copyLink;
   if (!isSample && !SILENT) track("result_shown", { char: c.id, day_stem: ds, strength: { 신강:"strong", 신약:"weak", 중화:"balanced" }[a.strengthLabel], has_time: hasTime, lang: LANG });
   CX_SEEN = false;
@@ -250,12 +249,6 @@ function shareUrl() {
   const base = (window.DAIYA_CONFIG && window.DAIYA_CONFIG.siteUrl) || (location.origin + location.pathname);
   return base + "#" + LANG;
 }
-$("shareX").addEventListener("click", () => {
-  if (!LAST_RESULT) return;
-  const text = U().shareText(LAST_RESULT.name, LAST_RESULT.stem, LAST_RESULT.type);
-  track("share_click", { channel: "x", char: LAST_RESULT.id, lang: LANG });
-  window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(shareUrl()), "_blank", "noopener");
-});
 $("copyLink").addEventListener("click", async () => {
   track("share_click", { channel: "copy", char: LAST_RESULT && LAST_RESULT.id, lang: LANG });
   try { await navigator.clipboard.writeText(shareUrl()); $("copyLink").textContent = U().copied; setTimeout(() => $("copyLink").textContent = U().copyLink, 1600); } catch (e) {}

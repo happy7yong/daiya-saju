@@ -283,9 +283,9 @@ const PACK_EN = {
       "The key character is your <b>Day Stem</b>, the top of your day pillar: it stands for <i>you</i>. Each of the ten stems has its own image — a great tree, the sun, a candle, a mountain, the sea. The other characters are read by how they relate to your Day Stem (the <b>Ten Gods</b>), and whether the chart supports you strongly or weakly (<b>Strong</b> / <b>Weak</b>) shapes your style.",
       "For compatibility, Saju looks at how two Day Stems meet: some pairs bind together in a <b>Union</b> (e.g. Jia Wood + Ji Earth), some <b>Clash</b> head-on (e.g. Jia Wood vs Geng Metal), and others nurture or control each other. This test uses those ideas just for fun — it's not fortune-telling."
     ],
-    title:"Find Your Ace of Diamond Match by Saju",
+    title:"Find Your Ace of Diamond Player & Chemistry by Saju",
     eyebrow:"An unofficial fan test: your day stem sets the position, your chart's strength picks the player",
-    h1a:"Find your", h1b:"Ace of Diamond match by Saju",
+    h1a:"Find your Ace of Diamond", h1b:"player & chemistry by Saju",
     lede:"Each day stem is paired with two players of similar nature. A strong chart points to the player who leads from the front; a weak chart, to the one who grows alongside others. Find your match among 20 players and coaches from Seido, Inashiro and Yakushi, then compare with the real Saju drawn from their official birthdays.",
     bd:"Date of birth (solar)", bt:"Time of birth", zi:"Rat hour (23:30~)", ziNext:"Use next day's pillar", ziSame:"Use same day's pillar",
     nt:"I don't know my birth time", hint:"Based on Korea Standard Time (UTC+9); solar terms are computed from the sun's ecliptic longitude. If you were born outside Korea, enter the local time converted to KST.",
