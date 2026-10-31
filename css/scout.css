@@ -70,3 +70,4 @@
 .sc-tw { font-size: 12px; color: var(--ink-soft); }
 .sc-camp { grid-column: 1 / -1; margin: 0; font-size: 14px; padding: 10px 12px; border-radius: 10px; background: var(--bg); }
 .sc-camp b { color: var(--accent); margin-right: 4px; }
+.sc-numl b { font-size: 15px; color: var(--ink); } .sc-numl { line-height: 1.55; }

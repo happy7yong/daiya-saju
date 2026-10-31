@@ -59,15 +59,15 @@ function detailHtml(R, rc) {
 const teamTag = t => `<span class="team ${t}">${esc(P().team[t])}</span>`;
 
 // 포지션별 선수 (작중 포지션 기준)
-// 등번호: 신강 = 일본 고교야구 주전 번호(1투수 2포수 3일루 4이루 6유격 8중견), 중화 = 같은 포지션 후보 번호(+10), 신약 = 남은 벤치 번호 (모두 1~20)
 const POS = {
-  P:   { ids:["eijun","furuya","mei","sanada","kawakami","amahisa"], partner:"C",  num:[1, 11, 20] },
-  C:   { ids:["miyuki","chris","okumura","miyauchi","yui"],          partner:"P",  num:[2, 12, 19] },
-  SS:  { ids:["kuramochi","kanemaru"],                               partner:"2B", num:[6, 16, 10] },
-  "2B":{ ids:["ryosuke","haruichi"],                                 partner:"SS", num:[4, 14, 15] },
-  CL:  { ids:["tetsu","raichi","masuko"],                            partner:"CL", num:[3, 13, 17] },
-  CF:  { ids:["isashiki","carlos","shirasu","toujou"],               partner:"CF", num:[8, 18, 17] }
+  P:   { ids:["eijun","furuya","mei","sanada","kawakami","amahisa"], partner:"C" },
+  C:   { ids:["miyuki","chris","okumura","miyauchi","yui"],          partner:"P" },
+  SS:  { ids:["kuramochi","kanemaru"],                               partner:"2B" },
+  "2B":{ ids:["ryosuke","haruichi"],                                 partner:"SS" },
+  CL:  { ids:["tetsu","raichi","masuko"],                            partner:"CL" },
+  CF:  { ids:["isashiki","carlos","shirasu","toujou"],               partner:"CF" }
 };
+const HADO = [[3, 8], [2, 7], [5, 10], [4, 9], [1, 6]]; // 목 화 토 금 수
 const SCHOOLS = ["seido", "inashiro", "yakushi", "ichidai"];
 // 학교별 에이스 (맞대결 상대)
 const ACES = { seido:["eijun","furuya"], inashiro:["mei"], yakushi:["sanada"], ichidai:["amahisa"] };
@@ -90,7 +90,8 @@ function scout(p) {
   const base = ["CL", "P", "C", "SS", "2B"][domG];
   const pos = base === "CL" && (a.el[1] + a.el[3]) / tot < 0.3 ? "CF" : base;
   const lab = a.strengthLabel;
-  const num = POS[pos].num[lab === "신강" ? 0 : lab === "중화" ? 1 : 2];
+  // 등번호: 하도(河圖) 오행수 — 수 1·6, 화 2·7, 목 3·8, 금 4·9, 토 5·10. 양간은 앞 숫자, 음간은 뒤 숫자, 신약이면 +10 (1~20)
+  const pair = HADO[ds >> 1], numBase = pair[ds % 2], num = numBase + (lab === "신약" ? 10 : 0);
   // 학교 스카우트 관심도
   // 학교 = 십성 비중을 그대로 나눠 가짐 (세이도: 관성+인성, 이나시로: 비겁, 야쿠시: 식상, 이치다이산: 재성 → 합 100%)
   const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1], ichidai: r[2] };
@@ -126,7 +127,7 @@ function scout(p) {
   // 같이 크는 동기: 라이벌·짝꿍 제외, 합·같은 오행·생 관계 우대
   const bb = { hap:12, same:8, get:6, give:6 };
   const buddy = BUDDIES.filter(id => id !== rival.c.id && id !== partner.c.id).map(cs).sort((x, y) => (y.score + (bb[y.rel] || 0)) - (x.score + (bb[x.rel] || 0)))[0];
-  return { lowEl, buddy, offer, ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
+  return { pair, numBase, lowEl, buddy, offer, ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
 }
 
 function personCard(R, title, rc, why) {
@@ -185,7 +186,7 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
   const schoolName = pk.team[R.school];
   $("scHero").innerHTML = `
     <div class="sc-admit">🏫 <b class="sc-school ${R.school}">${esc(schoolName)}</b> ${esc(s.admit)}</div>
-    <div class="sc-uni"><span class="sc-num">${R.num}</span><span class="sc-numl">${esc(s.num(R.num))}</span></div>
+    <div class="sc-uni"><span class="sc-num">${R.num}</span><span class="sc-numl"><b>${esc(s.num(R.num))}</b><br>${esc(s.numWhy(u.el[R.ds >> 1], R.pair.join("·"), R.ds % 2 === 0, R.numBase, R.num, R.lab === "신약", s.numDesc[R.ds >> 1]))}</span></div>
     <p class="sc-why"><b>📨 ${esc(R.offer === "seido" ? s.offerSeido : s.offerOther(pk.team[R.offer]))}</b> ${esc(R.why(R.offer))}${R.offer === "seido" ? "" : " " + esc(s.chooseSeido)}</p>
     <h3>${esc(s.pos[R.pos])}</h3>
     <p class="sc-chart">${esc(s.myChart(u.stemName(R.ds), u.strength[R.lab], pk.groups[GROUPS[R.domG]]))}</p>
