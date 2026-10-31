@@ -290,3 +290,7 @@ button.bar.pick[aria-pressed="true"]::after { color: var(--accent); }
 .pair.good .ball .pct { color: #8be09a; }
 .pair.good .match-text h3 { font-size: clamp(30px, 7.5vw, 44px); }
 .pair.good .kind { font-size: 20px; }
+
+/* 찰떡 배터리 카드 안의 궁합 풀이 */
+.cx-in { border-top: 2px dashed var(--line); padding-top: 16px; margin-top: 4px; display: flex; flex-direction: column; gap: 14px; }
+.cx-in .cx-head .mini { background: var(--paper); }

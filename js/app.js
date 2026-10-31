@@ -62,7 +62,7 @@ function applyStatic() {
   document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === LANG));
 }
 
-let CX = null, CX_PICK = null, CX_SEEN = false, LAST_RESULT = null, SILENT = false;
+let CX = null, CX_PICK = null, BEST_ID = null, CX_SEEN = false, LAST_RESULT = null, SILENT = false;
 let LAST = [1997, 8, 21, 9, 40, true, "next", true];
 function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   LAST = [y, m, d, hh, mm, hasTime, ziMode, isSample];
@@ -143,6 +143,8 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
 
   // 궁합
   const cs = compat(ds, a, c.id);
+  CX = { ds, a, p, me: c };
+  BEST_ID = cs[0].c.id;
   const best = cs[0], worst = cs[cs.length - 1];
   const pairHtml = (r, good) => {
     const x = C(r.c), ch = chemOf([c.id, x.id].sort().join("|")), RR = pk.rel[r.rel];
@@ -173,12 +175,12 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
       </div>
       <p class="story">${esc(story)}</p>
       <p class="split">${esc(u.relLine(x.name, !!x.real, stemName(x.rds), stemName(ds), RR.k))}</p>
-      <p class="verdict">${esc(verdict)}</p>`;
+      <p class="verdict">${esc(verdict)}</p>
+      <div class="cx-in">${cxHtml(r.c)}</div>`;
   };
   $("pGood").innerHTML = heroHtml(best);
   $("pBad").innerHTML = pairHtml(worst, false);
   $("chem").innerHTML = cs.map(r => { const x = C(r.c); return `<button type="button" class="bar pick" data-id="${x.id}"><span>${x.emoji} ${esc(x.name)}</span><div class="track"><div class="fill" style="width:${r.score}%;background:${r.score >= 60 ? "var(--field)" : r.score < 40 ? "var(--fire)" : "var(--earth)"}"></div></div><span class="n">${r.score}</span></button>`; }).join("");
-  CX = { ds, a, p, me: c };
   const keep = cs.find(r => r.c.id === CX_PICK);
   renderCx(keep ? keep.c : best.c);
 
@@ -191,12 +193,21 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
 }
 
 // ===== 궁합 풀이 =====
+function markPick(id) {
+  document.querySelectorAll("#chem .pick").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === id));
+}
+// 다른 선수를 골랐을 때: 아래쪽 별도 칸에 풀이 표시 (찰떡 배터리는 위 카드 안에 이미 있음)
 function renderCx(rc) {
+  CX_PICK = rc.id;
+  markPick(rc.id);
+  if (rc.id === BEST_ID) { $("cpx").hidden = true; return; }
+  $("cpx").hidden = false;
+  $("cpx").innerHTML = cxHtml(rc);
+}
+function cxHtml(rc) {
   const u = U(), x = U().cx, pk = P();
   const { ds, a, p, me } = CX;
   const t = C(rc), r = compatOne(ds, a, rc), q = r.parts, R = pk.rel[r.rel];
-  CX_PICK = rc.id;
-  document.querySelectorAll("#chem .pick").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === rc.id));
   const pts = v => `<span class="pts ${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : ""}${v}</span>`;
   const elList = arr => arr.map(i => (LANG === "en" ? "" : EL_H[i]) + (LANG === "ja" ? "" : (LANG === "en" ? u.el[i] : "(" + u.el[i] + ")"))).join(LANG === "ja" ? "・" : ", ");
   const bLab = b => LANG === "ko" ? BRANCHES[b] + " " + BRANCHES_K[b] : LANG === "ja" ? BRANCHES[b] : u.branchesR[b] + " (" + BRANCHES[b] + ")";
@@ -220,7 +231,7 @@ function renderCx(rc) {
   const theirs = t.real
     ? `<div class="pillars-scroll"><div class="pillars">${pillarHtml(t.real, t.rds, [["hour", null], ["day", t.real.day], ["month", t.real.month], ["year", t.real.year]], true)}</div></div>`
     : `<p class="split">${esc(x.noReal(t.name))}</p>`;
-  $("cpx").innerHTML = `
+  return `
     <div class="cx-head">${mini(t)}<div><h3>${esc(x.h)}</h3><div class="sub">${esc(x.title("", t.name))}</div></div><div class="cx-score"><b>${r.score}</b><span>${esc(x.total)}</span></div></div>
     <div class="cx-charts">
       <div><h4>${esc(x.mine)}</h4><div class="pillars-scroll"><div class="pillars">${pillarHtml(p, ds, [["hour", p.hour], ["day", p.day], ["month", p.month], ["year", p.year]])}</div></div></div>
@@ -233,7 +244,7 @@ document.addEventListener("click", e => {
   const b = e.target.closest("#chem .pick"); if (!b || !CX) return;
   const rc = CHARS.find(c => c.id === b.dataset.id); renderCx(rc);
   track("compat_pick", { char: rc.id, lang: LANG });
-  $("cpx").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  (rc.id === BEST_ID ? $("pGood") : $("cpx")).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 });
 
 function setLang(l) {
@@ -279,7 +290,7 @@ $("u-introT").addEventListener("click", () => track("intro_toggle", { open: !$("
 if ("IntersectionObserver" in window) {
   new IntersectionObserver(es => es.forEach(en => {
     if (en.isIntersecting && !CX_SEEN && $("sampleTag").hidden) { CX_SEEN = true; track("compat_view", { lang: LANG }); }
-  }), { threshold: 0.4 }).observe($("cpx"));
+  }), { threshold: 0.25 }).observe($("pGood"));
 }
 
 LANG = pickLang();
