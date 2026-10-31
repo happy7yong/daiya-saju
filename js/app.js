@@ -70,8 +70,10 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   const p = computeSaju(y, m, d, hh, mm, hasTime, ziMode);
   const a = analyze(p); a._p = p;
   const ds = p.day[0];
-  const ranked = score(ds, a);
+  const ranked = scoreReal(ds, a);
   const top = ranked[0], c = C(top.c);
+  let prevPct = pct(top.raw);
+  const OTHER_PCT = ranked.slice(1, 4).map(r => (prevPct = Math.min(pct(r.raw), prevPct - 1)));
 
   $("sampleTag").hidden = !isSample;
   $("sampleTag").textContent = u.sample(y, m, d, hasTime ? String(hh).padStart(2, "0") + ":" + String(mm).padStart(2, "0") : "");
@@ -82,29 +84,34 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
   $("mName").textContent = c.name;
   $("mAlias").innerHTML = teamTag(c) + esc(c.pos);
   $("mTag").textContent = c.tag;
-  LAST_RESULT = { id: c.id, name: c.name, stem: stemName(c.stem), type: c.s > 0 ? u.strongType : u.weakType,
+  LAST_RESULT = { id: c.id, name: c.name, stem: stemName(c.rds), type: strLab(c.ra.strengthLabel),
     ds, s: a.strengthLabel === "신강" ? "s" : a.strengthLabel === "신약" ? "w" : "b", pct: pct(top.raw),
-    others: ranked.slice(1, 4).map(r => [r.c.id, pct(r.raw)]) };
+    others: ranked.slice(1, 4).map((r, i) => [r.c.id, OTHER_PCT[i]]) };
   $("shareBox").hidden = isSample;
   $("copyLink").textContent = u.shareMine;
   $("shareNote").textContent = "";
   if (!isSample && !SILENT) track("result_shown", { char: c.id, day_stem: ds, strength: { 신강:"strong", 신약:"weak", 중화:"balanced" }[a.strengthLabel], has_time: hasTime, lang: LANG });
   CX_SEEN = false;
 
-  const pair = CHARS.filter(x => x.stem === ds).map(C);
-  const strongC = pair.find(x => x.s > 0), weakC = pair.find(x => x.s < 0);
-  $("split").innerHTML = u.split(esc(stemName(ds)), esc(strongC.name), esc(weakC.name), strLab(a.strengthLabel), Math.round(a.support * 100));
+  // 나와 같은 일간으로 태어난 선수 안내
+  const sameStem = CHARS.filter(x => x.real && x.rds === ds).map(C);
+  $("split").innerHTML = sameStem.length
+    ? u.splitR(esc(stemName(ds)), sameStem.map(x => `<b>${esc(x.name)}</b>`).join(", "), strLab(a.strengthLabel), Math.round(a.support * 100))
+    : top.tier === 1 ? u.splitSib(esc(stemName(ds)), u.el[ds >> 1], strLab(a.strengthLabel), Math.round(a.support * 100))
+    : u.splitNone(esc(stemName(ds)), strLab(a.strengthLabel), Math.round(a.support * 100));
 
-  // 근거
+  // 근거: 일간 → 가장 닮은 십성 → 신강약 (모두 선수의 실제 생일 사주와 비교)
   const rs = [];
-  const si = pk.stem[ds];
-  const stemTxt = c.stem === ds ? c.why.stem : u.stemFallback(stemName(ds), si.sym, si.kw, strongC.name, weakC.name, c.name);
-  rs.push([u.dayKey(stemName(ds)), stemTxt]);
-  const bestPart = top.parts.filter(x => x.v > 0 && c.why[x.g]).sort((x, y) => y.v - x.v)[0];
-  if (bestPart) rs.push([grpName(bestPart.g) + " " + Math.round(a.ratio[bestPart.i] * 100) + "%", c.why[bestPart.g]]);
-  const sKey = c.s > 0 ? "strong" : "weak";
-  const okS = c.s > 0 ? a.strengthLabel !== "신약" : a.strengthLabel !== "신강";
-  if (c.why[sKey] && top.sPts > 0 && okS) rs.push([a.strengthLabel === "중화" ? (c.s > 0 ? u.midS : u.midW) : strLab(a.strengthLabel), c.why[sKey]]);
+  const lead = c.rds === ds ? u.leadSame(stemName(ds))
+    : (c.rds >> 1) === (ds >> 1) ? u.leadSib(stemName(ds), stemName(c.rds), u.el[ds >> 1])
+    : u.leadOther(stemName(ds), stemName(c.rds));
+  rs.push([u.dayKey(stemName(c.rds)), lead + " " + pk.realStem[c.id]]);
+  const gi = top.sharedI, gk = GROUPS[gi];
+  rs.push([grpName(gk), u.sharedGroup(grpName(gk), pk.gdesc[gk], Math.round(a.ratio[gi] * 100), Math.round(c.ra.ratio[gi] * 100)) + (c.why[gk] ? " " + c.why[gk] : "")]);
+  if (top.sameStrength) {
+    const sk = c.ra.strengthLabel === "신강" ? "strong" : c.ra.strengthLabel === "신약" ? "weak" : null;
+    rs.push([strLab(a.strengthLabel), u.sameStrength(strLab(a.strengthLabel)) + (sk && c.why[sk] ? " " + c.why[sk] : "")]);
+  }
   $("reasons").innerHTML = rs.map(r => `<li><span class="k">${esc(r[0])}</span><p>${esc(r[1])}</p></li>`).join("");
   $("tChar").innerHTML = c.traits.map(t => `<li>${esc(t)}</li>`).join("");
   $("tEp").innerHTML = c.eps.map(t => `<li>${esc(t)}</li>`).join("");
@@ -122,12 +129,9 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
     $("birth").innerHTML = `<div class="bhead"><b>${esc(c.name)}</b><span>${u.birthHeadNoYear(bm, bdd)}</span></div>
       <p>${u.noYear(bm, bdd, esc(stemName(c.stem)))}</p>${vsHtml}`;
   } else {
-    const typeNote = c.rds === c.stem ? u.sameType(esc(stemName(c.rds)))
-      : u.diffType(esc(stemName(c.stem)), esc(stemName(c.rds)), esc(pk.stem[c.rds].sym), esc(pk.stem[c.rds].kw));
     const domR = c.ra.ratio.indexOf(Math.max(...c.ra.ratio));
     $("birth").innerHTML = `<div class="bhead"><b>${esc(c.name)}</b><span>${u.birthHead(bm, bdd, by)}</span></div>
       <div class="pillars-scroll"><div class="pillars">${pillarHtml(c.real, c.rds, [["hour", null], ["day", c.real.day], ["month", c.real.month], ["year", c.real.year]], true)}</div></div>
-      <p>${typeNote}</p>
       <p>${u.birthStr(strLab(c.ra.strengthLabel), grpName(GROUPS[domR]), pk.gdesc[GROUPS[domR]])}</p>${vsHtml}`;
   }
 
@@ -143,7 +147,7 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
     : `<span class="split">${esc(u.noneSame(stemName(ds)))}</span>`;
 
   // 다음 후보
-  $("others").innerHTML = ranked.slice(1, 4).map(r => { const x = C(r.c); return `<div class="other">${mini(x)}<div><div class="nm">${esc(x.name)}</div><div class="sub">${esc(u.otherSub(pct(r.raw), pk.team[x.team], stemName(x.stem), x.s > 0 ? u.strongType : u.weakType))}</div></div></div>`; }).join("");
+  $("others").innerHTML = ranked.slice(1, 4).map((r, i) => { const x = C(r.c); return `<div class="other">${mini(x)}<div><div class="nm">${esc(x.name)}</div><div class="sub">${esc(u.otherSub(OTHER_PCT[i], pk.team[x.team], stemName(x.rds), strLab(x.ra.strengthLabel)))}</div></div></div>`; }).join("");
 
   // 궁합
   const cs = compat(ds, a, c.id);
@@ -193,10 +197,10 @@ function render(y, m, d, hh, mm, hasTime, ziMode, isSample) {
 
   // 도감
   const rows = [...CHARS].sort((x, y) => (!x.real) - (!y.real) || x.rds - y.rds || x.bday[1] - y.bday[1]).map(C);
-  $("dex").innerHTML = `<tr>${u.dexHead.map(h => `<th>${h}</th>`).join("")}</tr>` +
+  $("dex").innerHTML = `<tr>${u.dexHead.slice(0, 5).map(h => `<th>${h}</th>`).join("")}</tr>` +
     rows.map(x => `<tr class="${x.real && x.rds === ds ? "hit" : ""}"><td>${x.emoji} ${esc(x.name)}</td><td>${u.dexBirth(x.bday[1], x.bday[2])}</td>` +
       (x.real ? `<td class="han">${STEMS[x.real.day[0]]}${BRANCHES[x.real.day[1]]}</td><td class="e-${EL[x.rds >> 1]}">${esc(stemName(x.rds))}</td><td>${strLab(x.ra.strengthLabel)}</td>` : `<td>—</td><td>${u.dexNoYear}</td><td>—</td>`) +
-      `<td>${esc(stemName(x.stem))} ${x.s > 0 ? u.strongType : u.weakType}</td></tr>`).join("");
+      `</tr>`).join("");
 }
 
 // ===== 궁합 풀이 =====

@@ -51,7 +51,7 @@ function score(ds, a) {
     return { c, raw: stemPts + gPts + sPts, stemPts, gPts, sPts, parts };
   }).sort((x, y) => y.raw - x.raw);
 }
-function pct(raw) { return Math.max(12, Math.min(99, Math.round(38 + raw * 0.75))); }
+function pct(raw) { return Math.max(12, Math.min(99, Math.round(30 + raw * 0.75))); }
 
 // 두 일간 관계: hap(합) chung(충) same(비화) give(내가 생) get(상대가 생) ctrl(내가 극) hit(상대가 극)
 function relation(me, you) {
@@ -105,4 +105,36 @@ function compatOne(ds, a, c) {
   const s = 50 + relPts + fillPts + dayPts + yearPts;
   return { c, rel, score: Math.max(5, Math.min(99, Math.round(s))),
     parts: { relPts, fillGood, fillBad, fillPts, dayRel, dayPts, yearRel, yearPts } };
+}
+
+// ===== 닮은 선수 매칭: 선수의 실제 생일 사주 기준 =====
+// 1) 같은 일간 선수가 있으면 그중에서, 2) 없으면 같은 오행 선수 중에서, 3) 그것도 없으면 전체에서 고름
+// 그룹 안에서는 십성 구성(±30) + 신강약(±12) + 오행 분포(0~10) + 일지·월지 일치(최대 10)로 비교
+// BALANCE는 같은 일간 그룹 안에서 결과가 한 선수에게 쏠리지 않게 하는 작은 보정값 (무작위 생년월일로 보정)
+// 출생 연도를 모르는 선수(카타오카 감독)는 매칭에서 제외
+const BALANCE = { tetsu:-2.8, kanemaru:0, haruichi:-4.7, eijun:-1.3, yui:-13.4, toujou:-4.6, chris:3.9, sanada:1.5, masuko:4.6, kuramochi:3.5, kawakami:-9.2, isashiki:3.9, raichi:3.5, mei:5.9, ryosuke:1.6, furuya:6.4, carlos:4.3, miyuki:-6, okumura:2.8 };
+function scoreReal(ds, a) {
+  const norm = v => { const s = Math.hypot(...v) || 1; return v.map(x => x / s); };
+  const myEl = norm(a.el), myP = a._p;
+  const list = CHARS.filter(c => c.real).map(c => {
+    const tier = c.rds === ds ? 2 : (c.rds >> 1) === (ds >> 1) ? 1 : 0;
+    const stemPts = [0, 28, 45][tier];
+    let diff = 0, shared = -1, sharedI = 0;
+    for (let i = 0; i < 5; i++) {
+      diff += Math.abs(a.ratio[i] - c.ra.ratio[i]);
+      const m = Math.min(a.ratio[i], c.ra.ratio[i]);
+      if (m > shared) { shared = m; sharedI = i; }
+    }
+    const gPts = 30 - diff * 30;
+    const sPts = 12 - Math.abs(a.support - c.ra.support) * 30;
+    const ce = norm(c.ra.el);
+    const elPts = myEl.reduce((s, v, i) => s + v * ce[i], 0) * 10;
+    const brPts = myP ? (myP.day[1] === c.real.day[1] ? 6 : 0) + (myP.month[1] === c.real.month[1] ? 4 : 0) : 0;
+    // 생일 사주 구성이 완전히 같은 선수(크리스·이사시키)는 내 일지·월지로 결정적으로 갈라 줌
+    const tie = myP ? ((myP.day[1] * 7 + myP.month[1] * 5 + c.real.month[1] * 3) % 11) * 0.01 : 0;
+    const raw = stemPts + gPts + sPts + elPts + brPts;           // 닮음 % 표시용
+    const rank = raw + (BALANCE[c.id] || 0) + tie;               // 그룹 안 순위용
+    return { c, tier, raw, rank, stemPts, gPts, sPts, elPts, brPts, sharedI, shared, sameStrength: a.strengthLabel === c.ra.strengthLabel };
+  });
+  return list.sort((x, y) => (y.tier - x.tier) || (y.rank - x.rank));
 }
