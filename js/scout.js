@@ -92,7 +92,7 @@ function scout(p) {
   // 학교 = 십성 비중을 그대로 나눠 가짐 (세이도: 관성+인성, 이나시로: 비겁, 야쿠시: 식상, 이치다이산: 재성 → 합 100%)
   const sp = { seido: r[3] + r[4], inashiro: r[0], yakushi: r[1], ichidai: r[2] };
   const schools = SCHOOLS.map(k => ({ k, v: sp[k], pct: Math.round(sp[k] * 100) })).sort((x, y) => y.v - x.v);
-  const school = schools[0].k;
+  const offer = schools[0].k, school = "seido"; // 제안은 가장 높은 학교, 입학은 항상 세이도
   // 궁합 (공용 compatOne)
   const real = CHARS.filter(c => c.real);
   const cs = id => compatOne(ds, a, byId(id));
@@ -118,7 +118,7 @@ function scout(p) {
   */ const room = null;
   const weapon = { kind: pos === "P" ? "P" : "H", el: domEl, ref: byId(WEAPON_REF[pos === "P" ? "P" : "H"][domEl]) };
   const why = s => S().schoolReason[s](Math.round(sp[s] * 100), s === "inashiro" ? a.support >= 0.55 : (domEl === 3 || domEl === 4));
-  return { ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
+  return { offer, ace, room, weapon, why, p, a, ds, domG, domEl, pos, num, lab, schools, school, rival, partner, mentor };
 }
 
 function personCard(R, title, rc, why) {
@@ -132,7 +132,7 @@ let LAST = [1997, 8, 21, 9, 40, true, "next", true], LAST_R = null;
 // ===== 결과 공유 (생년월일은 넣지 않고 결과만) =====
 function shareUrl(R) {
   const base = location.origin + "/scout";
-  const f = [R.school, R.pos, R.num, { 신강:"s", 중화:"b", 신약:"w" }[R.lab], R.mentor.c.id, R.mentor.score, R.rival.c.id, R.rival.score, R.partner.c.id, R.partner.score, R.ace.c.id, R.ace.score]
+  const f = [R.offer, R.pos, R.num, { 신강:"s", 중화:"b", 신약:"w" }[R.lab], R.mentor.c.id, R.mentor.score, R.rival.c.id, R.rival.score, R.partner.c.id, R.partner.score, R.ace.c.id, R.ace.score]
 ;
   return base + "?sc=" + f.join(".") + "#" + LANG;
 }
@@ -142,7 +142,7 @@ function parseFriend() {
     const a = v.split(".");
     const ok = id => byId(id) ? id : null;
     if (!SCHOOLS.includes(a[0]) || !POS[a[1]]) return null;
-    const f = { school:a[0], pos:a[1], num:+a[2], lab:{ s:"신강", b:"중화", w:"신약" }[a[3]] || "중화",
+    const f = { offer:a[0], pos:a[1], num:+a[2], lab:{ s:"신강", b:"중화", w:"신약" }[a[3]] || "중화",
       mentor:[ok(a[4]), +a[5]], rival:[ok(a[6]), +a[7]], partner:[ok(a[8]), +a[9]], ace:[ok(a[10]), +a[11]] };
     if (![f.mentor, f.rival, f.partner, f.ace].every(x => x[0])) return null;
     return f;
@@ -155,15 +155,15 @@ function renderFriend() {
   const chip = (t, [id, sc]) => `<span class="chip">${mini(C(byId(id)))}${esc(t)} ${nm(id)}${sc ? " · " + esc(s.pts(sc)) : ""}</span>`;
   box.hidden = false;
   box.innerHTML = `<span class="friend-label">${esc(s.friendT)}</span>
-    <div class="sc-fhead"><b class="sc-school ${f.school}">${esc(P().team[f.school])}</b> <span class="sc-fnum">#${f.num}</span> <span class="sc-fpos">${esc(s.pos[f.pos])}</span></div>
-    <div class="friend-others">${chip(s.mentorT, f.mentor)}${chip(s.rivalT, f.rival)}${chip(s.partnerT[f.pos], f.partner)}${chip(s.aceChip, f.ace)}</div>
+    <div class="sc-fhead"><b class="sc-school seido">${esc(P().team.seido)}</b> <span class="sc-fnum">#${f.num}</span> <span class="sc-fpos">${esc(s.pos[f.pos])}</span></div>
+    <div class="friend-others">${chip(s.mentorT, f.mentor)}${chip(s.rivalT, f.rival)}${chip(s.partnerT[f.pos], f.partner)}${chip(s.aceChip, f.ace)}${f.offer !== "seido" ? `<span class="chip">📨 ${esc(s.offerChip(P().team[f.offer]))}</span>` : ""}</div>
     <button type="button" class="go friend-go" id="friendGo">${esc(s.tryMine)}</button>`;
   $("friendGo").addEventListener("click", () => { $("bd").focus(); $("f").scrollIntoView({ behavior: "smooth", block: "center" }); track("friend_try_click", { lang: LANG, page: "scout" }); });
 }
 document.addEventListener("click", async e => {
   if (!e.target.closest("#copyLink") || !LAST_R) return;
   const url = shareUrl(LAST_R);
-  track("share_click", { channel: "copy", page: "scout", school: LAST_R.school, lang: LANG });
+  track("share_click", { channel: "copy", page: "scout", offer: LAST_R.offer, lang: LANG });
   try { await navigator.clipboard.writeText(url); $("shareNote").textContent = S().copied; } catch (er) { $("shareNote").textContent = url; }
 });
 document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("sc-more") && e.target.open) track("scout_detail_open", { lang: LANG }); }, true);
@@ -178,7 +178,7 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
   $("scHero").innerHTML = `
     <div class="sc-admit">🏫 <b class="sc-school ${R.school}">${esc(schoolName)}</b> ${esc(s.admit)}</div>
     <div class="sc-uni"><span class="sc-num">${R.num}</span><span class="sc-numl">${esc(s.num(R.num))}</span></div>
-    <p class="sc-why"><b>${esc(s.whyL(schoolName))}</b> ${esc(R.why(R.school))}</p>
+    <p class="sc-why"><b>📨 ${esc(R.offer === "seido" ? s.offerSeido : s.offerOther(pk.team[R.offer]))}</b> ${esc(R.why(R.offer))}${R.offer === "seido" ? "" : " " + esc(s.chooseSeido)}</p>
     <h3>${esc(s.pos[R.pos])}</h3>
     <p class="sc-chart">${esc(s.myChart(u.stemName(R.ds), u.strength[R.lab], pk.groups[GROUPS[R.domG]]))}</p>
     <p class="key">${esc(s.posWhy[R.pos])}</p>
@@ -200,7 +200,7 @@ function render(y, m, d, hh, mm, hasTime, zi, isSample) {
     + `<p class="sc-pred">${esc(s.predL)} <b>${esc(s.pred[R.ace.rel] || s.pred.other)}</b></p>`;
   LAST_R = R;
   $("scCoach").innerHTML = `<div class="sc-ct">${esc(s.coachT)}</div><blockquote>“${esc(s.coach[R.domG])} ${esc(R.school === "seido" ? s.coachTail[R.lab] : s.coachAway(schoolName))}”</blockquote>`;
-  if (!isSample && !render.silent) track("scout_result", { school: R.school, pos: R.pos, lang: LANG });
+  if (!isSample && !render.silent) track("scout_result", { offer: R.offer, pos: R.pos, lang: LANG });
 }
 
 function applyStatic() {
