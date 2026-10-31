@@ -6,5 +6,5 @@ window.DAIYA_CONFIG = {
   // Google Analytics 4 측정 ID (예: "G-XXXXXXXXXX") — https://analytics.google.com
   ga4Id: "",
   // 공유 링크에 쓸 배포 주소 (비워 두면 현재 주소를 그대로 사용)
-  siteUrl: ""
+  siteUrl: "https://daiya-saju.vercel.app/"
 };
