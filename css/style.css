@@ -257,10 +257,6 @@ button.bar.pick { font: inherit; color: inherit; background: none; border: 0; pa
 button.bar.pick:hover { background: var(--bg); }
 button.bar.pick[aria-pressed="true"] { background: var(--accent-soft); }
 
-/* 공유 버튼 */
-.share { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.share button { font: inherit; font-size: 13px; padding: 6px 14px; border-radius: 999px; cursor: pointer; border: 1.5px solid var(--ink); }
-.share-copy { background: var(--paper); color: var(--ink); }
 
 /* 궁합 점수 막대: 누를 수 있다는 걸 보여 주기 */
 .chem { gap: 8px 14px; }
