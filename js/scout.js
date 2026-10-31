@@ -59,13 +59,14 @@ function detailHtml(R, rc) {
 const teamTag = t => `<span class="team ${t}">${esc(P().team[t])}</span>`;
 
 // 포지션별 선수 (작중 포지션 기준)
+// 등번호: 신강 = 일본 고교야구 주전 번호(1투수 2포수 3일루 4이루 6유격 8중견), 중화 = 같은 포지션 후보 번호(+10), 신약 = 남은 벤치 번호 (모두 1~20)
 const POS = {
-  P:   { ids:["eijun","furuya","mei","sanada","kawakami","amahisa"], partner:"C",  num:[1, 11, 18] },
-  C:   { ids:["miyuki","chris","okumura","miyauchi","yui"],          partner:"P",  num:[2, 12, 22] },
-  SS:  { ids:["kuramochi","kanemaru"],                               partner:"2B", num:[6, 15, 25] },
-  "2B":{ ids:["ryosuke","haruichi"],                                 partner:"SS", num:[4, 14, 24] },
-  CL:  { ids:["tetsu","raichi","masuko"],                            partner:"CL", num:[3, 13, 23] },
-  CF:  { ids:["isashiki","carlos","shirasu","toujou"],               partner:"CF", num:[8, 17, 27] }
+  P:   { ids:["eijun","furuya","mei","sanada","kawakami","amahisa"], partner:"C",  num:[1, 11, 20] },
+  C:   { ids:["miyuki","chris","okumura","miyauchi","yui"],          partner:"P",  num:[2, 12, 19] },
+  SS:  { ids:["kuramochi","kanemaru"],                               partner:"2B", num:[6, 16, 10] },
+  "2B":{ ids:["ryosuke","haruichi"],                                 partner:"SS", num:[4, 14, 15] },
+  CL:  { ids:["tetsu","raichi","masuko"],                            partner:"CL", num:[3, 13, 17] },
+  CF:  { ids:["isashiki","carlos","shirasu","toujou"],               partner:"CF", num:[8, 18, 17] }
 };
 const SCHOOLS = ["seido", "inashiro", "yakushi", "ichidai"];
 // 학교별 에이스 (맞대결 상대)
