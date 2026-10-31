@@ -250,13 +250,19 @@ function cxHtml(rc) {
   const items = [];
   items.push([x.kDay, r.parts.relPts, `<b>${esc(stemName(ds))}</b> × <b>${esc(stemName(t.rds))}</b> · ${esc(R.k)}${LANG === "ja" ? "：" : ". "}${esc(R.d)}`]);
   if (t.real) {
-    let f = x.fillNone;
+    let f = q.fillPts >= 3 ? x.fillSome : x.fillNone;
     if (q.fillGood.length && q.fillBad.length) f = x.fillBoth(elList(q.fillGood), elList(q.fillBad));
     else if (q.fillGood.length) f = x.fillGood(elList(q.fillGood));
     else if (q.fillBad.length) f = x.fillBad(elList(q.fillBad));
-    items.push([x.kFill, q.fillPts, esc(f)]);
+    if (q.fillYong.length) f += " " + x.yongNote(elList(q.fillYong), a.support < 0.45);
+    items.push([x.kFill, q.fillPts, esc(f) + `<br><span class="sub">${esc(x.yongBase(elList(q.yong), a.support < 0.45))}</span>`]);
+    if (q.johu) items.push([x.kJohu, q.johuPts, esc(x.johu[q.johu.season](elList([q.johu.el]), q.johuPts))]);
     items.push([x.kDayB, q.dayPts, esc(x.br[q.dayRel](bLab(p.day[1]), bLab(t.real.day[1]))) + `<br><span class="sub">${esc(x.dayBNote)}</span>`]);
     items.push([x.kYear, q.yearPts, esc(x.br[q.yearRel](zLab(p.year[1]), zLab(t.real.year[1]))) + `<br><span class="sub">${esc(x.yearNote)}</span>`]);
+    if (q.hidden) { const sn = i => LANG === "ko" ? STEMS_K[i] : LANG === "ja" ? STEMS[i] : u.stemsR[i];
+      items.push([x.kHidden, q.hiddenPts, esc(q.hidden.mine ? x.hiddenMine(sn(ds), x.slot[q.hidden.slot], sn(q.hidden.stem)) : x.hiddenTheirs(sn(t.rds), x.slot[q.hidden.slot], sn(q.hidden.stem)))]); }
+    if (q.twin) { const il = LANG === "ko" ? STEMS_K[p.day[0]] + BRANCHES_K[p.day[1]] : LANG === "ja" ? STEMS[p.day[0]] + BRANCHES[p.day[1]] : u.stemsR[p.day[0]] + "-" + u.branchesR[p.day[1]];
+      items.push([x.kTwin, q.twinPts, esc(x.twin(il))]); }
   } else {
     items.push([x.kFill, null, esc(x.noBranch)]);
   }
@@ -306,7 +312,7 @@ $("f").addEventListener("submit", e => {
   CX_PICK = null;
   track("submit_birth", { has_time: hasTime, lang: LANG, from_share: !!FRIEND });
   render(+mt[1], +mt[2], +mt[3], hh, mm, hasTime, $("zi").value, false);
-  $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  $("mine").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 });
 
 // ===== 공유 =====

@@ -85,29 +85,58 @@ function branchRel(x, y) {
   if (Math.abs(x - y) === 6) return "chung";
   if (x !== y && x % 4 === y % 4) return "samhap";
   if (x === y) return "same";
+  if (WONJIN.some(([a, b]) => (a === x && b === y) || (a === y && b === x))) return "wonjin";
   return "none";
 }
+// 원진: 자미·축오·인유·묘신·진해·사술
+const WONJIN = [[0,7],[1,6],[2,9],[3,8],[4,11],[5,10]];
+// 조후: 겨울(해자축)은 화, 여름(사오미)은 수가 필요
+function johuNeed(p) { const m = p.month[1]; return [11,0,1].includes(m) ? { season:"winter", el:1 } : [5,6,7].includes(m) ? { season:"summer", el:4 } : null; }
+// 용신(간이): 신약이면 나를 돕는 기운(인성·비겁), 신강·중화면 힘을 빼 주는 기운(식상·재성·관성)
+function yongEls(ds, a) { const me = ds >> 1; const g = a.support < 0.45 ? [4, 0] : [1, 2, 3]; return g.map(k => (me + k) % 5); }
 function compat(ds, a, selfId) {
   return CHARS.filter(c => c.id !== selfId).map(c => compatOne(ds, a, c)).sort((x, y) => y.score - x.score);
 }
 function compatOne(ds, a, c) {
   const rel = relation(ds, c.rds);
-  const relPts = { hap:30, chung:-30, same: a.strengthIdx > 0.15 ? -6 : 10, give:6, get:14, ctrl:-4, hit:-14 }[rel];
-  // 내게 없는 오행을 상대가 채워 주면 가산, 둘 다 넘치는 오행이면 감산
-  const fillGood = [], fillBad = [];
-  if (c.ra) for (let i = 0; i < 5; i++) {
-    if (a.el[i] === 0 && c.ra.el[i] >= 2) fillGood.push(i);
-    else if (a.el[i] >= 3 && c.ra.el[i] >= 3) fillBad.push(i);
+  // 1) 일간 관계: 기본 바탕 (합·충이 가장 크지만 일지·오행이 뒤집을 수 있는 정도)
+  const relPts = { hap:14, chung:-14, same: a.strengthIdx > 0.15 ? -4 : 6, give:3, get:8, ctrl:-2, hit:-8 }[rel];
+  const myP = a._p, parts = { relPts, fillGood:[], fillYong:[], fillBad:[], fillPts:0, yong:null, johu:null, johuPts:0, dayRel:null, dayPts:0, yearRel:null, yearPts:0, hidden:null, hiddenPts:0, twin:false, twinPts:0 };
+  if (c.ra && myP) {
+    const tot = a.el.reduce((x, y) => x + y, 0), ct = c.ra.el.reduce((x, y) => x + y, 0);
+    const yong = yongEls(ds, a); parts.yong = yong;
+    // 2) 오행 보완 + 용신: 내가 부족한 오행(20% 미만)을 상대가 많이 가질수록, 그게 용신이면 두 배
+    let f = 0;
+    for (let i = 0; i < 5; i++) {
+      const mine = a.el[i] / tot, theirs = c.ra.el[i] / ct, need = Math.max(0, 0.2 - mine), isY = yong.includes(i);
+      f += need * theirs * (isY ? 2 : 1);
+      if (need >= 0.075 && theirs >= 0.3) { parts.fillGood.push(i); if (isY) parts.fillYong.push(i); }
+      if (mine >= 0.375 && theirs >= 0.375) parts.fillBad.push(i);
+    }
+    parts.fillPts = Math.max(-10, Math.min(16, Math.round(f * 70) - parts.fillBad.length * 5));
+    // 3) 조후: 겨울생은 화, 여름생은 수가 많은 상대에게서 온도를 맞춰 받음
+    const jn = johuNeed(myP);
+    if (jn) { const sh = c.ra.el[jn.el] / ct; parts.johu = jn; parts.johuPts = sh >= 0.33 ? 6 : sh >= 0.17 ? 3 : 0; }
+    // 4) 일지(가까운 사람의 자리): 육합·삼합·원진·충
+    parts.dayRel = branchRel(myP.day[1], c.real.day[1]);
+    parts.dayPts = { yukhap:10, samhap:7, same:3, wonjin:-4, chung:-10, none:0 }[parts.dayRel];
+    // 5) 띠
+    parts.yearRel = branchRel(myP.year[1], c.real.year[1]);
+    parts.yearPts = { yukhap:4, samhap:4, same:1, wonjin:-2, chung:-4, none:0 }[parts.yearRel];
+    // 6) 숨은 합: 내 일간 ↔ 상대 월간·연간, 상대 일간 ↔ 내 월간·연간·시간
+    const hapW = (x, y) => Math.abs(x - y) === 5;
+    if (rel !== "hap") {
+      const h1 = [["month", c.real.month], ["year", c.real.year]].find(([, q]) => hapW(ds, q[0]));
+      const h2 = [["month", myP.month], ["year", myP.year], ["hour", myP.hour]].find(([, q]) => q && hapW(c.rds, q[0]));
+      if (h1) parts.hidden = { mine:true, slot:h1[0], stem:h1[1][0] };
+      else if (h2) parts.hidden = { mine:false, slot:h2[0], stem:h2[1][0] };
+      if (parts.hidden) parts.hiddenPts = 4;
+    }
+    // 7) 같은 일주: 사주 쌍둥이
+    if (myP.day[0] === c.real.day[0] && myP.day[1] === c.real.day[1]) { parts.twin = true; parts.twinPts = 3; }
   }
-  const fillPts = Math.max(-12, Math.min(16, fillGood.length * 8 - fillBad.length * 6));
-  const myP = a._p;
-  const dayRel = branchRel(myP ? myP.day[1] : null, c.real ? c.real.day[1] : null);
-  const dayPts = dayRel === "yukhap" ? 6 : dayRel === "chung" ? -6 : 0;
-  const yearRel = branchRel(myP ? myP.year[1] : null, c.real ? c.real.year[1] : null);
-  const yearPts = yearRel === "yukhap" || yearRel === "samhap" ? 4 : yearRel === "chung" ? -4 : 0;
-  const s = 50 + relPts + fillPts + dayPts + yearPts;
-  return { c, rel, score: Math.max(5, Math.min(99, Math.round(s))),
-    parts: { relPts, fillGood, fillBad, fillPts, dayRel, dayPts, yearRel, yearPts } };
+  const s = 50 + relPts + parts.fillPts + parts.johuPts + parts.dayPts + parts.yearPts + parts.hiddenPts + parts.twinPts;
+  return { c, rel, score: Math.max(5, Math.min(99, Math.round(s))), parts };
 }
 
 // ===== 닮은 선수 매칭: 선수의 실제 생일 사주 기준 =====
